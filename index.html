@@ -117,19 +117,8 @@
   }
   h1 em{ font-style:normal; color:var(--yellow); }
   .hero p{
-    max-width:640px; color:var(--text-dim); font-size:16px; line-height:1.65; margin:0;
+    max-width:760px; color:var(--text-dim); font-size:16px; line-height:1.65; margin:0;
   }
-
-  /* signature schema diagram */
-  .schema{
-    margin-top:48px; border:1px solid var(--line); border-radius:var(--radius);
-    background:var(--panel); padding:28px 24px 20px; overflow-x:auto;
-  }
-  .schema-label{
-    font-family:var(--mono); font-size:11px; color:var(--text-faint);
-    text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px;
-  }
-  .schema svg{ display:block; min-width:640px; width:100%; height:auto; }
 
   .disclaimer{
     margin:16px 0 28px; display:flex; align-items:flex-start; gap:14px;
@@ -184,6 +173,86 @@
   .mcp-note{
     font-size:13px; color:var(--text-faint); line-height:1.6; margin:0 0 20px;
     padding-left:12px; border-left:2px solid var(--line);
+  }
+  .onboarding{
+    margin:10px 0 24px;
+    padding:2px 0 0;
+  }
+  .onboarding-title{
+    font-family:var(--display);
+    font-size:22px;
+    margin:0 0 10px;
+    color:var(--text);
+  }
+  .onboarding-sub{
+    margin:0 0 16px;
+    color:var(--text-dim);
+    font-size:14px;
+    line-height:1.6;
+    max-width:760px;
+  }
+  .note-title{
+    display:block;
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    margin-bottom:6px;
+  }
+  .path-note{
+    margin:0 0 20px;
+    border-left:3px solid rgba(242,200,17,0.65);
+    padding:6px 0 6px 12px;
+    color:var(--text);
+    font-size:14px;
+    line-height:1.55;
+  }
+  .path-note b{ color:var(--yellow); }
+  .path-note .note-title{ color:var(--yellow); }
+  .mcp-explain{
+    margin:0 0 22px;
+    border-left:3px solid rgba(46,196,182,0.55);
+    padding:6px 0 6px 12px;
+    color:var(--text-dim);
+    font-size:14px;
+    line-height:1.6;
+  }
+  .mcp-explain b{ color:var(--text); }
+  .mcp-explain .note-title{ color:var(--teal); }
+  .via-inline{
+    margin:-8px 0 8px;
+    color:var(--text-faint);
+    font-size:12px;
+    font-family:var(--mono);
+  }
+  .via-card{
+    position:relative;
+    padding-top:18px;
+  }
+  .via-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--text-faint);
+    margin:0 0 8px;
+  }
+  .via-tag::before{
+    content:'';
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--teal);
+  }
+  .via-card.via-b .via-tag::before{ background:var(--yellow); }
+  .via-kicker{
+    margin:0 0 10px;
+    color:var(--text-faint);
+    font-size:12px;
+    font-family:var(--mono);
   }
 
   /* ---------- exercise card ---------- */
@@ -307,41 +376,73 @@
 <div class="hero">
   <div class="hero-eyebrow">Guion del taller</div>
   <h1>De heredar un dashboard<br>a <em>dominarlo con IA</em>.</h1>
-  <p>Contoso vende productos y servicios tecnológicos por distintos canales y zonas comerciales. Te incorporas a un proyecto Power BI existente: en diez ejercicios progresivos usarás Copilot/MCP para entenderlo, corregirlo, documentarlo y llevarlo a producción.</p>
-
-  <div class="schema">
-    <div class="schema-label">Ruta del modelo — cada nodo es un ejercicio</div>
-    <svg viewBox="0 0 940 150" xmlns="http://www.w3.org/2000/svg">
-      <line x1="40" y1="75" x2="900" y2="75" stroke="#2a3145" stroke-width="1.5"/>
-      <g id="schemaNodes"></g>
-    </svg>
-  </div>
+  <p>Contoso vende productos y servicios tecnológicos por distintos canales y zonas comerciales. Te incorporas a un proyecto Power BI existente y, a lo largo de este taller, aprenderás a usar IA con Power BI a través de MCP para entender el modelo, corregirlo, documentarlo y llevarlo a producción con criterio.</p>
 </div>
 
 <div class="section">
-  <div class="info-grid">
-    <div class="info-card">
-      <h3><span class="dot" style="background:var(--yellow)"></span>Preparación</h3>
-      <label class="check-item" data-check="prep-0">
-        <input type="checkbox"><span>GitHub Copilot CLI instalado — <a href="https://docs.github.com/es/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli" target="_blank" rel="noopener">guía de instalación</a></span>
-      </label>
-      <label class="check-item" data-check="prep-1">
-        <input type="checkbox"><span>MCP de modelado instalado — <a href="https://github.com/microsoft/powerbi-modeling-mcp" target="_blank" rel="noopener">microsoft/powerbi-modeling-mcp</a></span>
-      </label>
-      <label class="check-item" data-check="prep-2">
-        <input type="checkbox"><span>Skills de Fabric instaladas — <a href="https://github.com/microsoft/skills-for-fabric" target="_blank" rel="noopener">microsoft/skills-for-fabric</a></span>
-      </label>
-      <label class="check-item" data-check="prep-3">
+  <div class="onboarding">
+    <h2 class="onboarding-title">Antes de empezar</h2>
+    <p class="onboarding-sub">Vas a trabajar sobre un modelo real de Contoso. En este bloque defines cómo te conectarás con MCP y dejas lista tu vía de trabajo para que el resto de ejercicios sea fluido.</p>
+
+    <p class="mcp-explain">
+      <span class="note-title">Qué es MCP</span>
+      MCP (Model Context Protocol) es el puente entre la IA y tu modelo semántico de Power BI. Le permite inspeccionar tablas, medidas y relaciones, proponer cambios y ayudarte a documentar más rápido. <b>Importante:</b> las decisiones finales y la validación siguen siendo tuyas.
+    </p>
+
+    <p class="path-note">
+      <span class="note-title">Elige una sola vía</span>
+      Elige <b>solo una vía</b> y completa su preparación antes de continuar: <b>Vía A</b> (VS Code) o <b>Vía B</b> (Copilot CLI + Skills Fabric). No mezcles rutas.
+    </p>
+  </div>
+
+  <div class="info-grid" style="margin-top:0; margin-bottom:36px;">
+    <div class="info-card via-card via-a">
+      <p class="via-tag">Ruta A</p>
+      <h3><span class="dot" style="background:var(--teal)"></span>Vía A · Power BI + VS Code</h3>
+      <ul>
+        <li>Flujo guiado desde VS Code.</li>
+        <li>Ideal si ya trabajas en Power BI Desktop y quieres apoyo interactivo en el editor.</li>
+      </ul>
+      <p class="via-kicker">Preparación completa de la Vía A</p>
+      <label class="check-item" data-check="prep-a-0">
         <input type="checkbox"><span>Descargar y abrir el informe de Power BI — <a href="https://hiberus.sharepoint.com/:f:/r/sites/PowerBITeam/Documentos%20compartidos/General/3%20-%20Documentaci%C3%B3n%20y%20Formaci%C3%B3n/7%20-%20Inteligencia%20Artificial%20para%20Visualizaci%C3%B3n%20de%20datos?csf=1&web=1&e=KV8iT5" target="_blank" rel="noopener">carpeta del informe</a></span>
       </label>
+      <label class="check-item" data-check="prep-a-1">
+        <input type="checkbox"><span>Tener Power BI Desktop abierto con el informe cargado.</span>
+      </label>
+      <label class="check-item" data-check="prep-a-2">
+        <input type="checkbox"><span>Tener VS Code abierto en la carpeta del taller.</span>
+      </label>
+      <label class="check-item" data-check="prep-a-3">
+        <input type="checkbox"><span>Instalar el MCP desde Marketplace de VS Code (Power BI Modeling MCP) — <a href="https://marketplace.visualstudio.com/search?term=powerbi%20modeling%20mcp&target=VSCode&category=All%20categories&sortBy=Relevance" target="_blank" rel="noopener">buscar en Marketplace</a></span>
+      </label>
+      <label class="check-item" data-check="prep-a-4">
+        <input type="checkbox"><span>Iniciar el flujo desde terminal de VS Code para resolver ejercicios 1–10.</span>
+      </label>
     </div>
-    <div class="info-card">
-      <h3><span class="dot" style="background:var(--teal)"></span>Contexto de negocio</h3>
+    <div class="info-card via-card via-b">
+      <p class="via-tag">Ruta B</p>
+      <h3><span class="dot" style="background:var(--yellow)"></span>Vía B · Copilot CLI + Skills Fabric</h3>
       <ul>
-        <li>Contoso vende productos y servicios tecnológicos a particulares y empresas.</li>
-        <li>Vende a través de varios canales, con comerciales repartidos por zonas.</li>
-        <li>Os incorporáis a un proyecto existente que hay que entender y mejorar con IA.</li>
+        <li>Flujo completo desde terminal con MCP y skills.</li>
+        <li>Ideal si quieres trabajar fuera de VS Code o automatizar más el modelado.</li>
       </ul>
+      <p class="via-kicker">Preparación completa de la Vía B</p>
+      <label class="check-item" data-check="prep-b-0">
+        <input type="checkbox"><span>Tener <b>Node.js (incluye npm)</b> instalado — <a href="https://nodejs.org/es/download" target="_blank" rel="noopener">descarga oficial</a></span>
+      </label>
+      <label class="check-item" data-check="prep-b-1">
+        <input type="checkbox"><span>GitHub Copilot CLI instalado — <a href="https://docs.github.com/es/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli" target="_blank" rel="noopener">guía de instalación</a></span>
+      </label>
+      <label class="check-item" data-check="prep-b-2">
+        <input type="checkbox"><span>MCP de modelado instalado: <code>npm i @microsoft/powerbi-modeling-mcp</code> — <a href="https://github.com/microsoft/powerbi-modeling-mcp" target="_blank" rel="noopener">microsoft/powerbi-modeling-mcp</a></span>
+      </label>
+      <label class="check-item" data-check="prep-b-3">
+        <input type="checkbox"><span>Skills de Fabric instaladas — <a href="https://github.com/microsoft/skills-for-fabric" target="_blank" rel="noopener">microsoft/skills-for-fabric</a></span>
+      </label>
+      <label class="check-item" data-check="prep-b-4">
+        <input type="checkbox"><span>Tener Power BI Desktop abierto con el informe cargado para conectar el modelo.</span>
+      </label>
     </div>
   </div>
 
@@ -514,12 +615,9 @@ const EXERCISES = [
 
 const state = {}; // in-memory only, resets on reload
 EXERCISES.forEach(e => state[e.n] = false);
-state['prep-0'] = false;
-state['prep-1'] = false;
 
 const listEl = document.getElementById('exerciseList');
 const railNodes = document.getElementById('railNodes');
-const schemaNodes = document.getElementById('schemaNodes');
 const railFill = document.getElementById('railFill');
 const doneCountEl = document.getElementById('doneCount');
 const totalCountEl = document.getElementById('totalCount');
@@ -533,29 +631,22 @@ function updateProgress(){
 
   EXERCISES.forEach((e, i) => {
     const rn = document.getElementById('railnode-' + e.n);
-    const sn = document.getElementById('schemanode-' + e.n);
     const card = document.getElementById('exercise-' + e.n);
     const check = document.getElementById('done-check-' + e.n);
     if(state[e.n]){
       rn.classList.add('done');
-      sn.setAttribute('fill', 'var(--yellow)');
-      sn.setAttribute('stroke', 'var(--yellow)');
       card.classList.add('is-done');
       check.parentElement.classList.add('is-checked');
     } else {
       rn.classList.remove('done');
-      sn.setAttribute('fill', '#171b27');
-      sn.setAttribute('stroke', '#2a3145');
       card.classList.remove('is-done');
       check.parentElement.classList.remove('is-checked');
     }
   });
 }
 
-// build rail + schema nodes
+// build rail nodes
 EXERCISES.forEach((e, i) => {
-  const x = 40 + (i * (860 / (EXERCISES.length - 1)));
-
   const rn = document.createElement('div');
   rn.className = 'rail-node';
   rn.id = 'railnode-' + e.n;
@@ -565,19 +656,6 @@ EXERCISES.forEach((e, i) => {
     openExercise(e.n);
   });
   railNodes.appendChild(rn);
-
-  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  g.innerHTML = `
-    <circle id="schemanode-${e.n}" cx="${x}" cy="75" r="15" fill="#171b27" stroke="#2a3145" stroke-width="2" style="cursor:pointer"/>
-    <text x="${x}" y="80" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="#e9ebf3" style="pointer-events:none">${e.n}</text>
-    <text x="${x}" y="112" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#9299b3" style="pointer-events:none">${e.kicker}</text>
-  `;
-  g.style.cursor = 'pointer';
-  g.addEventListener('click', () => {
-    document.getElementById('exercise-' + e.n).scrollIntoView({behavior:'smooth', block:'start'});
-    openExercise(e.n);
-  });
-  schemaNodes.appendChild(g);
 });
 
 function openExercise(n){
