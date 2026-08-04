@@ -14,8 +14,8 @@
     --line:#2a3145;
     --line-soft:#232a3c;
     --text:#e9ebf3;
-    --text-dim:#9299b3;
-    --text-faint:#5d6580;
+    --text-dim:#b2bad4;
+    --text-faint:#8a93b2;
     --yellow:#f2c811;
     --yellow-dim:#a68d1f;
     --teal:#2ec4b6;
@@ -117,19 +117,19 @@
   }
   h1 em{ font-style:normal; color:var(--yellow); }
   .hero p{
-    max-width:760px; color:var(--text-dim); font-size:16px; line-height:1.65; margin:0;
+    max-width:none; color:var(--text-dim); font-size:16px; line-height:1.65; margin:0;
   }
 
   .disclaimer{
-    margin:16px 0 28px; display:flex; align-items:flex-start; gap:14px;
-    background:rgba(255,107,107,0.06); border:1px solid rgba(255,107,107,0.35);
-    border-radius:var(--radius); padding:16px 20px;
+    margin:16px 0 28px;
+    border-left:3px solid rgba(255,107,107,0.6);
+    padding:6px 0 6px 12px;
   }
-  .disclaimer-icon{
-    flex-shrink:0; width:22px; height:22px; border-radius:50%;
-    background:var(--coral); color:#1a0808; font-family:var(--display);
-    font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center;
-    margin-top:1px;
+  .disclaimer .note-title{
+    color:var(--coral);
+  }
+  .warning-icon{
+    margin-right:6px;
   }
   .disclaimer p{ margin:0; font-size:13.5px; line-height:1.6; color:var(--text-dim); }
   .disclaimer p b{ color:var(--text); }
@@ -172,7 +172,7 @@
   .exercises-sub{ color:var(--text-faint); font-size:13px; font-family:var(--mono); }
   .mcp-note{
     font-size:13px; color:var(--text-faint); line-height:1.6; margin:0 0 20px;
-    padding-left:12px; border-left:2px solid var(--line);
+    padding-left:0; border-left:none;
   }
   .onboarding{
     margin:10px 0 24px;
@@ -189,7 +189,7 @@
     color:var(--text-dim);
     font-size:14px;
     line-height:1.6;
-    max-width:760px;
+    max-width:none;
   }
   .note-title{
     display:block;
@@ -219,35 +219,32 @@
   }
   .mcp-explain b{ color:var(--text); }
   .mcp-explain .note-title{ color:var(--teal); }
-  .via-inline{
-    margin:-8px 0 8px;
-    color:var(--text-faint);
-    font-size:12px;
-    font-family:var(--mono);
-  }
+  .via-grid{ margin-top:0; margin-bottom:36px; }
   .via-card{
     position:relative;
     padding-top:18px;
   }
-  .via-tag{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    font-family:var(--mono);
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:0.08em;
-    color:var(--text-faint);
-    margin:0 0 8px;
+  .via-toggle{
+    margin:6px 0 0;
+    background:var(--panel-2);
+    color:var(--text-dim);
+    border:1px solid var(--line);
+    border-radius:6px;
+    font-family:var(--body);
+    font-size:12px;
+    padding:6px 10px;
+    cursor:pointer;
   }
-  .via-tag::before{
-    content:'';
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:var(--teal);
+  .via-toggle:hover{ border-color:var(--teal); color:var(--teal); }
+  .via-card.via-b .via-toggle:hover{ border-color:var(--yellow); color:var(--yellow); }
+  .via-details{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .28s ease;
   }
-  .via-card.via-b .via-tag::before{ background:var(--yellow); }
+  .via-card.open .via-details{ max-height:900px; }
+  .via-card.open.via-a{ border-color:var(--teal); box-shadow:0 0 0 1px rgba(46,196,182,0.25); }
+  .via-card.open.via-b{ border-color:var(--yellow-dim); box-shadow:0 0 0 1px rgba(242,200,17,0.22); }
   .via-kicker{
     margin:0 0 10px;
     color:var(--text-faint);
@@ -386,7 +383,7 @@
 
     <p class="mcp-explain">
       <span class="note-title">Qué es MCP</span>
-      MCP (Model Context Protocol) es el puente entre la IA y tu modelo semántico de Power BI. Le permite inspeccionar tablas, medidas y relaciones, proponer cambios y ayudarte a documentar más rápido. <b>Importante:</b> las decisiones finales y la validación siguen siendo tuyas.
+      MCP (Model Context Protocol) es el puente entre la IA y tu modelo semántico de Power BI. Le permite inspeccionar tablas, medidas y relaciones, proponer cambios y ayudarte a documentar más rápido.<br><b>Importante:</b> las decisiones finales y la validación siguen siendo tuyas.
     </p>
 
     <p class="path-note">
@@ -395,60 +392,63 @@
     </p>
   </div>
 
-  <div class="info-grid" style="margin-top:0; margin-bottom:36px;">
-    <div class="info-card via-card via-a">
-      <p class="via-tag">Ruta A</p>
+  <div class="info-grid via-grid">
+    <div class="info-card via-card via-a" data-path="a">
       <h3><span class="dot" style="background:var(--teal)"></span>Vía A · Power BI + VS Code</h3>
       <ul>
         <li>Flujo guiado desde VS Code.</li>
         <li>Ideal si ya trabajas en Power BI Desktop y quieres apoyo interactivo en el editor.</li>
       </ul>
-      <p class="via-kicker">Preparación completa de la Vía A</p>
-      <label class="check-item" data-check="prep-a-0">
-        <input type="checkbox"><span>Descargar y abrir el informe de Power BI — <a href="https://hiberus.sharepoint.com/:f:/r/sites/PowerBITeam/Documentos%20compartidos/General/3%20-%20Documentaci%C3%B3n%20y%20Formaci%C3%B3n/7%20-%20Inteligencia%20Artificial%20para%20Visualizaci%C3%B3n%20de%20datos?csf=1&web=1&e=KV8iT5" target="_blank" rel="noopener">carpeta del informe</a></span>
-      </label>
-      <label class="check-item" data-check="prep-a-1">
-        <input type="checkbox"><span>Tener Power BI Desktop abierto con el informe cargado.</span>
-      </label>
-      <label class="check-item" data-check="prep-a-2">
-        <input type="checkbox"><span>Tener VS Code abierto en la carpeta del taller.</span>
-      </label>
-      <label class="check-item" data-check="prep-a-3">
-        <input type="checkbox"><span>Instalar el MCP desde Marketplace de VS Code (Power BI Modeling MCP) — <a href="https://marketplace.visualstudio.com/search?term=powerbi%20modeling%20mcp&target=VSCode&category=All%20categories&sortBy=Relevance" target="_blank" rel="noopener">buscar en Marketplace</a></span>
-      </label>
-      <label class="check-item" data-check="prep-a-4">
-        <input type="checkbox"><span>Iniciar el flujo desde terminal de VS Code para resolver ejercicios 1–10.</span>
-      </label>
+      <button class="via-toggle" data-via-toggle="a">Ver preparación</button>
+      <div class="via-details">
+        <p class="via-kicker">Preparación completa de la Vía A</p>
+        <label class="check-item" data-check="prep-a-0">
+          <input type="checkbox"><span>Descargar y abrir el informe de Power BI — <a href="https://hiberus.sharepoint.com/:f:/r/sites/PowerBITeam/Documentos%20compartidos/General/3%20-%20Documentaci%C3%B3n%20y%20Formaci%C3%B3n/7%20-%20Inteligencia%20Artificial%20para%20Visualizaci%C3%B3n%20de%20datos?csf=1&web=1&e=KV8iT5" target="_blank" rel="noopener">carpeta del informe</a></span>
+        </label>
+        <label class="check-item" data-check="prep-a-1">
+          <input type="checkbox"><span>Tener Power BI Desktop abierto con el informe cargado.</span>
+        </label>
+        <label class="check-item" data-check="prep-a-2">
+          <input type="checkbox"><span>Tener VS Code abierto en la carpeta del taller.</span>
+        </label>
+        <label class="check-item" data-check="prep-a-3">
+          <input type="checkbox"><span>Instalar el MCP desde Marketplace de VS Code (Power BI Modeling MCP) — <a href="https://marketplace.visualstudio.com/search?term=powerbi%20modeling%20mcp&target=VSCode&category=All%20categories&sortBy=Relevance" target="_blank" rel="noopener">buscar en Marketplace</a></span>
+        </label>
+        <label class="check-item" data-check="prep-a-4">
+          <input type="checkbox"><span>Iniciar el flujo desde terminal de VS Code para resolver ejercicios 1–10.</span>
+        </label>
+      </div>
     </div>
-    <div class="info-card via-card via-b">
-      <p class="via-tag">Ruta B</p>
+    <div class="info-card via-card via-b" data-path="b">
       <h3><span class="dot" style="background:var(--yellow)"></span>Vía B · Copilot CLI + Skills Fabric</h3>
       <ul>
         <li>Flujo completo desde terminal con MCP y skills.</li>
         <li>Ideal si quieres trabajar fuera de VS Code o automatizar más el modelado.</li>
       </ul>
-      <p class="via-kicker">Preparación completa de la Vía B</p>
-      <label class="check-item" data-check="prep-b-0">
-        <input type="checkbox"><span>Tener <b>Node.js (incluye npm)</b> instalado — <a href="https://nodejs.org/es/download" target="_blank" rel="noopener">descarga oficial</a></span>
-      </label>
-      <label class="check-item" data-check="prep-b-1">
-        <input type="checkbox"><span>GitHub Copilot CLI instalado — <a href="https://docs.github.com/es/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli" target="_blank" rel="noopener">guía de instalación</a></span>
-      </label>
-      <label class="check-item" data-check="prep-b-2">
-        <input type="checkbox"><span>MCP de modelado instalado: <code>npm i @microsoft/powerbi-modeling-mcp</code> — <a href="https://github.com/microsoft/powerbi-modeling-mcp" target="_blank" rel="noopener">microsoft/powerbi-modeling-mcp</a></span>
-      </label>
-      <label class="check-item" data-check="prep-b-3">
-        <input type="checkbox"><span>Skills de Fabric instaladas — <a href="https://github.com/microsoft/skills-for-fabric" target="_blank" rel="noopener">microsoft/skills-for-fabric</a></span>
-      </label>
-      <label class="check-item" data-check="prep-b-4">
-        <input type="checkbox"><span>Tener Power BI Desktop abierto con el informe cargado para conectar el modelo.</span>
-      </label>
+      <button class="via-toggle" data-via-toggle="b">Ver preparación</button>
+      <div class="via-details">
+        <p class="via-kicker">Preparación completa de la Vía B</p>
+        <label class="check-item" data-check="prep-b-0">
+          <input type="checkbox"><span>Tener <b>Node.js (incluye npm)</b> instalado — <a href="https://nodejs.org/es/download" target="_blank" rel="noopener">descarga oficial</a></span>
+        </label>
+        <label class="check-item" data-check="prep-b-1">
+          <input type="checkbox"><span>GitHub Copilot CLI instalado — <a href="https://docs.github.com/es/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli" target="_blank" rel="noopener">guía de instalación</a></span>
+        </label>
+        <label class="check-item" data-check="prep-b-2">
+          <input type="checkbox"><span>MCP de modelado instalado: <code>npm i @microsoft/powerbi-modeling-mcp</code> — <a href="https://github.com/microsoft/powerbi-modeling-mcp" target="_blank" rel="noopener">microsoft/powerbi-modeling-mcp</a></span>
+        </label>
+        <label class="check-item" data-check="prep-b-3">
+          <input type="checkbox"><span>Skills de Fabric instaladas — <a href="https://github.com/microsoft/skills-for-fabric" target="_blank" rel="noopener">microsoft/skills-for-fabric</a></span>
+        </label>
+        <label class="check-item" data-check="prep-b-4">
+          <input type="checkbox"><span>Tener Power BI Desktop abierto con el informe cargado para conectar el modelo.</span>
+        </label>
+      </div>
     </div>
   </div>
 
   <div class="disclaimer">
-    <div class="disclaimer-icon">!</div>
-    <p><b>Pensamiento crítico, siempre.</b> La IA acelera el trabajo, pero no sustituye tu criterio como analista. Revisa cada medida, cada relación y cada visual antes de darlos por buenos — sobre todo cuando la respuesta suene convincente. Un resultado bien redactado no es lo mismo que un resultado correcto.</p>
+    <p><span class="note-title"><span class="warning-icon">&#9888;</span>Pensamiento crítico, siempre</span>La IA acelera el trabajo, pero no sustituye tu criterio como analista. Revisa cada medida, cada relación y cada visual antes de darlos por buenos — sobre todo cuando la respuesta suene convincente. Un resultado bien redactado no es lo mismo que un resultado correcto.</p>
   </div>
 
   <div class="exercises-head">
@@ -622,6 +622,14 @@ const railFill = document.getElementById('railFill');
 const doneCountEl = document.getElementById('doneCount');
 const totalCountEl = document.getElementById('totalCount');
 totalCountEl.textContent = EXERCISES.length;
+
+document.querySelectorAll('.via-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const card = btn.closest('.via-card');
+    const isOpen = card.classList.toggle('open');
+    btn.textContent = isOpen ? 'Ocultar preparación' : 'Ver preparación';
+  });
+});
 
 function updateProgress(){
   const done = EXERCISES.filter(e => state[e.n]).length;
