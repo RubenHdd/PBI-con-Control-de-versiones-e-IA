@@ -1,209 +1,731 @@
-<!DOCTYPE HTML>
-<!--
-	Prologue by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Prologue by HTML5 UP</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	<body class="is-preload">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller Power BI + IA · Ejercicios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#10131c;
+    --panel:#171b27;
+    --panel-2:#1d2332;
+    --line:#2a3145;
+    --line-soft:#232a3c;
+    --text:#e9ebf3;
+    --text-dim:#9299b3;
+    --text-faint:#5d6580;
+    --yellow:#f2c811;
+    --yellow-dim:#a68d1f;
+    --teal:#2ec4b6;
+    --coral:#ff6b6b;
+    --radius:10px;
+    --display: 'Space Grotesk', 'IBM Plex Sans', sans-serif;
+    --body: 'IBM Plex Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at 10% -10%, rgba(46,196,182,0.08), transparent 40%),
+      radial-gradient(ellipse at 90% 0%, rgba(242,200,17,0.06), transparent 45%),
+      var(--ink);
+    color:var(--text);
+    font-family:var(--body);
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:rgba(242,200,17,0.35); }
 
-		<!-- Header -->
-			<div id="header">
+  a{color:inherit;}
 
-				<div class="top">
+  /* ---------- top progress rail ---------- */
+  .rail-wrap{
+    position:sticky; top:0; z-index:50;
+    background:rgba(16,19,28,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .rail{
+    max-width:1080px; margin:0 auto;
+    padding:14px 24px 12px;
+    display:flex; align-items:center; gap:18px;
+  }
+  .rail-brand{
+    font-family:var(--display); font-weight:700; font-size:14px;
+    letter-spacing:0.02em; color:var(--text); white-space:nowrap;
+  }
+  .rail-brand span{ color:var(--yellow); }
+  .rail-track{
+    position:relative; flex:1; height:34px;
+    display:flex; align-items:center;
+  }
+  .rail-line{
+    position:absolute; left:14px; right:14px; top:50%;
+    height:2px; background:var(--line); transform:translateY(-50%);
+  }
+  .rail-fill{
+    position:absolute; left:14px; top:50%; height:2px;
+    background:linear-gradient(90deg, var(--teal), var(--yellow));
+    transform:translateY(-50%); transition:width .4s ease; width:0%;
+  }
+  .rail-nodes{ position:relative; display:flex; justify-content:space-between; width:100%; z-index:1; }
+  .rail-node{
+    width:26px; height:26px; border-radius:50%;
+    border:2px solid var(--line); background:var(--panel);
+    color:var(--text-dim); font-family:var(--mono); font-size:11px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:all .2s ease; flex-shrink:0;
+    position:relative;
+  }
+  .rail-node:hover{ border-color:var(--teal); color:var(--text); transform:translateY(-2px); }
+  .rail-node.done{ background:var(--yellow); border-color:var(--yellow); color:#1a1608; font-weight:600; }
+  .rail-node .tip{
+    position:absolute; top:130%; left:50%; transform:translateX(-50%);
+    background:var(--panel-2); border:1px solid var(--line); border-radius:6px;
+    padding:4px 8px; font-family:var(--body); font-size:11px; color:var(--text-dim);
+    white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s ease;
+  }
+  .rail-node:hover .tip{ opacity:1; }
+  .rail-count{
+    font-family:var(--mono); font-size:12px; color:var(--text-dim); white-space:nowrap;
+  }
+  .rail-count b{ color:var(--yellow); font-weight:600; }
 
-					<!-- Logo -->
-						<div id="logo">
-							<span class="image avatar48"><img src="images/avatar.jpg" alt="" /></span>
-							<h1 id="title">Jane Doe</h1>
-							<p>Hyperspace Engineer</p>
-						</div>
+  @media (max-width:720px){
+    .rail-brand{ display:none; }
+    .rail-node .tip{ display:none; }
+  }
 
-					<!-- Nav -->
-						<nav id="nav">
-							<ul>
-								<li><a href="#top" id="top-link"><span class="icon solid fa-home">Intro</span></a></li>
-								<li><a href="#portfolio" id="portfolio-link"><span class="icon solid fa-th">Portfolio</span></a></li>
-								<li><a href="#about" id="about-link"><span class="icon solid fa-user">About Me</span></a></li>
-								<li><a href="#contact" id="contact-link"><span class="icon solid fa-envelope">Contacto</span></a></li>
-							</ul>
-						</nav>
+  /* ---------- hero ---------- */
+  .hero{
+    max-width:1080px; margin:0 auto; padding:64px 24px 40px;
+  }
+  .hero-eyebrow{
+    font-family:var(--mono); font-size:12px; color:var(--teal);
+    letter-spacing:0.12em; text-transform:uppercase; margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .hero-eyebrow::before{
+    content:''; width:24px; height:1px; background:var(--teal);
+  }
+  h1{
+    font-family:var(--display); font-weight:700; font-size:clamp(32px,5vw,52px);
+    line-height:1.05; margin:0 0 20px; letter-spacing:-0.01em;
+  }
+  h1 em{ font-style:normal; color:var(--yellow); }
+  .hero p{
+    max-width:640px; color:var(--text-dim); font-size:16px; line-height:1.65; margin:0;
+  }
 
-				</div>
+  /* signature schema diagram */
+  .schema{
+    margin-top:48px; border:1px solid var(--line); border-radius:var(--radius);
+    background:var(--panel); padding:28px 24px 20px; overflow-x:auto;
+  }
+  .schema-label{
+    font-family:var(--mono); font-size:11px; color:var(--text-faint);
+    text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px;
+  }
+  .schema svg{ display:block; min-width:640px; width:100%; height:auto; }
 
-				<div class="bottom">
+  .disclaimer{
+    margin:16px 0 28px; display:flex; align-items:flex-start; gap:14px;
+    background:rgba(255,107,107,0.06); border:1px solid rgba(255,107,107,0.35);
+    border-radius:var(--radius); padding:16px 20px;
+  }
+  .disclaimer-icon{
+    flex-shrink:0; width:22px; height:22px; border-radius:50%;
+    background:var(--coral); color:#1a0808; font-family:var(--display);
+    font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center;
+    margin-top:1px;
+  }
+  .disclaimer p{ margin:0; font-size:13.5px; line-height:1.6; color:var(--text-dim); }
+  .disclaimer p b{ color:var(--text); }
 
-					<!-- Social Icons -->
-						<ul class="icons">
-							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-							<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-							<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-							<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
-							<li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
-						</ul>
+  /* ---------- sections ---------- */
+  .section{
+    max-width:1080px; margin:0 auto; padding:0 24px;
+  }
+  .info-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:36px 0 56px;
+  }
+  @media (max-width:720px){ .info-grid{ grid-template-columns:1fr; } }
+  .info-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:22px 22px 20px;
+  }
+  .info-card h3{
+    font-family:var(--display); font-size:15px; margin:0 0 14px; color:var(--text);
+    display:flex; align-items:center; gap:8px;
+  }
+  .info-card h3 .dot{ width:7px; height:7px; border-radius:50%; background:var(--teal); }
+  .info-card ul{ margin:0; padding-left:18px; color:var(--text-dim); font-size:14px; line-height:1.7; }
+  .info-card li::marker{ color:var(--text-faint); }
+  .check-item{
+    display:flex; align-items:flex-start; gap:10px; padding:6px 0;
+    font-size:14px; color:var(--text-dim); cursor:pointer; line-height:1.5;
+  }
+  .check-item input{ accent-color:var(--yellow); margin-top:3px; width:15px; height:15px; cursor:pointer; flex-shrink:0; }
+  .check-item.checked span{ color:var(--text-faint); text-decoration:line-through; }
+  .check-item a{ color:var(--teal); text-decoration:underline; text-underline-offset:2px; }
+  .check-item a:hover{ color:var(--yellow); }
 
-				</div>
+  .exercises-head{
+    display:flex; align-items:baseline; justify-content:space-between; margin:0 0 8px;
+    flex-wrap:wrap; gap:8px;
+  }
+  .exercises-head h2{
+    font-family:var(--display); font-size:22px; margin:0;
+  }
+  .exercises-sub{ color:var(--text-faint); font-size:13px; font-family:var(--mono); }
+  .mcp-note{
+    font-size:13px; color:var(--text-faint); line-height:1.6; margin:0 0 20px;
+    padding-left:12px; border-left:2px solid var(--line);
+  }
 
-			</div>
+  /* ---------- exercise card ---------- */
+  .exercise{
+    border:1px solid var(--line); border-radius:var(--radius); background:var(--panel);
+    margin-bottom:18px; overflow:hidden; scroll-margin-top:90px;
+    transition:border-color .2s ease;
+  }
+  .exercise.is-done{ border-color:var(--yellow-dim); }
+  .exercise-head{
+    display:flex; align-items:center; gap:16px; padding:18px 22px;
+    cursor:pointer; user-select:none;
+  }
+  .ex-num{
+    font-family:var(--mono); font-size:13px; color:var(--ink); font-weight:600;
+    width:34px; height:34px; border-radius:8px; background:var(--line-soft);
+    color:var(--text-dim); display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; transition:all .2s ease;
+  }
+  .exercise.is-done .ex-num{ background:var(--yellow); color:#1a1608; }
+  .ex-titles{ flex:1; min-width:0; }
+  .ex-titles .kicker{
+    font-family:var(--mono); font-size:11px; color:var(--teal); text-transform:uppercase;
+    letter-spacing:0.08em; margin-bottom:3px;
+  }
+  .ex-titles h3{ font-family:var(--display); font-size:17px; margin:0; color:var(--text); }
+  .ex-toggle{
+    width:28px; height:28px; border-radius:50%; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    color:var(--text-dim); transition:transform .25s ease;
+  }
+  .exercise.open .ex-toggle{ transform:rotate(45deg); }
+  .exercise-body{
+    max-height:0; overflow:hidden; transition:max-height .3s ease;
+  }
+  .exercise.open .exercise-body{ max-height:2000px; }
+  .exercise-inner{ padding:0 22px 24px; border-top:1px solid var(--line-soft); }
+  .ex-objetivo{
+    color:var(--text-dim); font-size:14px; line-height:1.65; margin:18px 0 20px;
+  }
+  .ex-objetivo b{ color:var(--text); font-weight:600; }
+  .ex-accept{
+    margin:0 0 20px; padding:12px 14px;
+    border:1px solid var(--line); border-radius:8px; background:var(--ink);
+  }
+  .ex-accept .head{
+    font-family:var(--body); font-size:13px; color:var(--text);
+    font-weight:600; margin-bottom:8px;
+  }
+  .ex-accept ul{
+    margin:0; padding-left:18px; color:var(--text-dim); font-size:13px; line-height:1.6;
+  }
 
-		<!-- Main -->
-			<div id="main">
+  .ex-tasks{ margin-bottom:20px; }
+  .ex-tasks .taskhead{
+    font-family:var(--mono); font-size:11px; color:var(--text-faint);
+    text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;
+  }
 
-				<!-- Intro -->
-					<section id="top" class="one dark cover">
-						<div class="container">
+  .prompt-block{
+    background:var(--ink); border:1px solid var(--line); border-radius:8px;
+    padding:14px 14px 14px 16px; margin-bottom:10px;
+    display:flex; align-items:flex-start; gap:12px;
+    position:relative;
+  }
+  .prompt-block .qmark{
+    font-family:var(--display); color:var(--yellow-dim); font-size:20px; line-height:1;
+    flex-shrink:0; margin-top:1px;
+  }
+  .prompt-block p{
+    margin:0; font-family:var(--mono); font-size:13px; line-height:1.6; color:var(--text);
+    flex:1;
+  }
+  .copy-btn{
+    flex-shrink:0; background:var(--panel-2); border:1px solid var(--line);
+    color:var(--text-dim); font-family:var(--body); font-size:12px; font-weight:500;
+    padding:6px 10px; border-radius:6px; cursor:pointer; transition:all .15s ease;
+    white-space:nowrap;
+  }
+  .copy-btn:hover{ border-color:var(--teal); color:var(--teal); }
+  .copy-btn.copied{ border-color:var(--yellow); color:var(--yellow); }
 
-							<header>
-								<h2 class="alt">Rubén Hermoso </h2>
-								<p>Data Analyst con conocimientos en Power BI, QlikView y SQL. </p>
-							</header>
+  .ex-footer{
+    display:flex; align-items:center; justify-content:space-between; margin-top:8px;
+    padding-top:16px; border-top:1px solid var(--line-soft);
+  }
+  .mark-done{
+    display:flex; align-items:center; gap:9px; cursor:pointer;
+    font-size:13px; color:var(--text-dim); font-weight:500;
+  }
+  .mark-done input{ accent-color:var(--yellow); width:16px; height:16px; cursor:pointer; }
+  .mark-done.is-checked{ color:var(--yellow); }
 
-							<footer>
-								<a href="#portfolio" class="button scrolly">Conoceme</a>
-							</footer>
+  footer{
+    max-width:1080px; margin:0 auto; padding:20px 24px 60px;
+    color:var(--text-faint); font-size:12px; font-family:var(--mono);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+  .reset-btn{
+    background:none; border:1px solid var(--line); color:var(--text-faint);
+    font-family:var(--mono); font-size:12px; padding:5px 10px; border-radius:6px;
+    cursor:pointer;
+  }
+  .reset-btn:hover{ border-color:var(--coral); color:var(--coral); }
+</style>
+</head>
+<body>
 
-						</div>
-					</section>
+<div class="rail-wrap">
+  <div class="rail">
+    <div class="rail-brand">TALLER <span>PBI · IA</span></div>
+    <div class="rail-track">
+      <div class="rail-line"></div>
+      <div class="rail-fill" id="railFill"></div>
+      <div class="rail-nodes" id="railNodes"></div>
+    </div>
+    <div class="rail-count"><b id="doneCount">0</b>/<span id="totalCount">10</span> ejercicios</div>
+  </div>
+</div>
 
-				<!-- Portfolio -->
-					<section id="portfolio" class="two">
-						<div class="container">
+<div class="hero">
+  <div class="hero-eyebrow">Guion del taller</div>
+  <h1>De heredar un dashboard<br>a <em>dominarlo con IA</em>.</h1>
+  <p>Contoso vende productos y servicios tecnológicos por distintos canales y zonas comerciales. Te incorporas a un proyecto Power BI existente: en diez ejercicios progresivos usarás Copilot/MCP para entenderlo, corregirlo, documentarlo y llevarlo a producción.</p>
 
-							<header>
-								<h2>Portfolio</h2>
-							</header>
+  <div class="schema">
+    <div class="schema-label">Ruta del modelo — cada nodo es un ejercicio</div>
+    <svg viewBox="0 0 940 150" xmlns="http://www.w3.org/2000/svg">
+      <line x1="40" y1="75" x2="900" y2="75" stroke="#2a3145" stroke-width="1.5"/>
+      <g id="schemaNodes"></g>
+    </svg>
+  </div>
+</div>
 
-							<p>Vitae natoque dictum etiam semper magnis enim feugiat convallis convallis
-							egestas rhoncus ridiculus in quis risus amet curabitur tempor orci penatibus.
-							Tellus erat mauris ipsum fermentum etiam vivamus eget. Nunc nibh morbi quis
-							fusce hendrerit lacus ridiculus.</p>
+<div class="section">
+  <div class="info-grid">
+    <div class="info-card">
+      <h3><span class="dot" style="background:var(--yellow)"></span>Preparación</h3>
+      <label class="check-item" data-check="prep-0">
+        <input type="checkbox"><span>GitHub Copilot CLI instalado — <a href="https://docs.github.com/es/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli" target="_blank" rel="noopener">guía de instalación</a></span>
+      </label>
+      <label class="check-item" data-check="prep-1">
+        <input type="checkbox"><span>MCP de modelado instalado — <a href="https://github.com/microsoft/powerbi-modeling-mcp" target="_blank" rel="noopener">microsoft/powerbi-modeling-mcp</a></span>
+      </label>
+      <label class="check-item" data-check="prep-2">
+        <input type="checkbox"><span>Skills de Fabric instaladas — <a href="https://github.com/microsoft/skills-for-fabric" target="_blank" rel="noopener">microsoft/skills-for-fabric</a></span>
+      </label>
+      <label class="check-item" data-check="prep-3">
+        <input type="checkbox"><span>Descargar y abrir el informe de Power BI — <a href="https://hiberus.sharepoint.com/:f:/r/sites/PowerBITeam/Documentos%20compartidos/General/3%20-%20Documentaci%C3%B3n%20y%20Formaci%C3%B3n/7%20-%20Inteligencia%20Artificial%20para%20Visualizaci%C3%B3n%20de%20datos?csf=1&web=1&e=KV8iT5" target="_blank" rel="noopener">carpeta del informe</a></span>
+      </label>
+    </div>
+    <div class="info-card">
+      <h3><span class="dot" style="background:var(--teal)"></span>Contexto de negocio</h3>
+      <ul>
+        <li>Contoso vende productos y servicios tecnológicos a particulares y empresas.</li>
+        <li>Vende a través de varios canales, con comerciales repartidos por zonas.</li>
+        <li>Os incorporáis a un proyecto existente que hay que entender y mejorar con IA.</li>
+      </ul>
+    </div>
+  </div>
 
-							<div class="row">
-								<div class="col-4 col-12-mobile">
-									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic02.jpg" alt="" /></a>
-										<header>
-											<h3>Karate Competitions</h3>
-										</header>
-									</article>
-									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic03.jpg" alt="" /></a>
-										<header>
-											<h3>Spotify </h3>
-											<p5>Onyx Data Challenge 2024</p5>
-										</header>
-									</article>
-								</div>
-								<div class="col-4 col-12-mobile">
-									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic04.jpg" alt="" /></a>
-										<header>
-											<h3>Trip through Education </h3>
-											<p5>Pacific DataViz Challenge 2024</p5>
-										</header>
-									</article>
-									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic05.jpg" alt="" /></a>
-										<header>
-											<h3>Natoque Vitae</h3>
-										</header>
-									</article>
-								</div>
-								<div class="col-4 col-12-mobile">
-									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic06.jpg" alt="" /></a>
-										<header>
-											<h3>Dolor Penatibus</h3>
-										</header>
-									</article>
-									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic07.jpg" alt="" /></a>
-										<header>
-											<h3>Orci Convallis</h3>
-										</header>
-									</article>
-								</div>
-							</div>
+  <div class="disclaimer">
+    <div class="disclaimer-icon">!</div>
+    <p><b>Pensamiento crítico, siempre.</b> La IA acelera el trabajo, pero no sustituye tu criterio como analista. Revisa cada medida, cada relación y cada visual antes de darlos por buenos — sobre todo cuando la respuesta suene convincente. Un resultado bien redactado no es lo mismo que un resultado correcto.</p>
+  </div>
 
-						</div>
-					</section>
+  <div class="exercises-head">
+    <h2>Ejercicios</h2>
+    <div class="exercises-sub">marca cada uno al completarlo · copia los prompts sugeridos</div>
+  </div>
+  <p class="mcp-note">El MCP de modelado permite que la IA lea y proponga cambios sobre tu modelo Power BI. Nada se aplica sin tu confirmación: tú sigues decidiendo qué se guarda en el informe.</p>
 
-				<!-- About Me -->
-					<section id="about" class="three">
-						<div class="container">
+  <div id="exerciseList"></div>
+</div>
 
-							<header>
-								<h2>About Me</h2>
-							</header>
+<footer>
+  <span>Progreso guardado solo en esta sesión del navegador.</span>
+  <button class="reset-btn" id="resetBtn">Reiniciar progreso</button>
+</footer>
 
-							<a href="#" class="image featured"><img src="images/pic08.jpg" alt="" /></a>
+<script>
+const EXERCISES = [
+  {
+    n: 1,
+    kicker: "Puesta en marcha",
+    title: "Conectarse al informe",
+    objetivo: "Conectarse al informe de Power BI en línea indicando, en la terminal, que se conecte al informe abierto usando la herramienta MCP de Power BI. Es importante especificar el nombre del informe.",
+    acceptance: [
+      "Te confirma claramente que está conectada al informe correcto (con el nombre que le diste).",
+      "Puede leer información básica del modelo (tablas y/o medidas) sin errores de conexión."
+    ],
+    prompts: [
+      "Conéctate al informe de Power BI que tengo abierto ahora mismo, llamado «[nombre del informe]», usando la herramienta MCP de Power BI."
+    ]
+  },
+  {
+    n: 2,
+    kicker: "Descubrimiento",
+    title: "Descubrir el modelo mediante IA",
+    objetivo: "Comprender el modelo semántico sin revisar manualmente todas las tablas.",
+    acceptance: [
+      "Te explica de forma clara qué tablas son de hechos y cuáles de dimensiones.",
+      "El resumen funcional conecta el modelo con el negocio (qué responde y para quién sirve)."
+    ],
+    prompts: [
+      "Describe este modelo semántico.",
+      "¿Cuál es la tabla de hechos? ¿Cuáles son las dimensiones?",
+      "Genera un resumen funcional."
+    ]
+  },
+  {
+    n: 3,
+    kicker: "Calidad y KPIs",
+    title: "Comprobar, corregir y crear KPIs",
+    objetivo: "Revisar las medidas existentes detectando errores, crear Margen y Ticket Medio explicando el DAX generado, y proponer formas de visualizar la información.",
+    acceptance: [
+      "Detecta y explica posibles problemas en medidas existentes (no solo los lista).",
+      "Crea Margen y Ticket Medio con DAX entendible y te indica cómo validarlos en visuales."
+    ],
+    prompts: [
+      "Comprueba las medidas existentes e indica si detectas algún error o inconsistencia.",
+      "Crea las medidas Margen y Ticket Medio, y revisa que se aplican correctamente las modificaciones."
+    ]
+  },
+  {
+    n: 4,
+    kicker: "Visualización",
+    title: "Página ejecutiva",
+    objetivo: "Diseñar una página ejecutiva para dirección comercial, indicando qué KPIs mostrar, qué filtros incluir y cómo distribuir visualmente el contenido. Primero se planifica la página y, solo si la propuesta convence, se pide su creación.",
+    acceptance: [
+      "La propuesta incluye KPIs, filtros y distribución de la página, explicando por qué cada decisión tiene sentido de negocio.",
+      "Al crear la página, respeta lo planificado y te deja analizar por periodo, canal y zona comercial sin fricción."
+    ],
+    phases: [
+      {
+        label: "1 · Planificar la página",
+        prompts: [
+          "Antes de crear nada, planifica una página ejecutiva para dirección comercial: propón los KPIs principales, los filtros necesarios y una distribución visual del contenido. Explícame el motivo de cada decisión."
+        ]
+      },
+      {
+        label: "2 · Crear la página",
+        prompts: [
+          "La planificación me convence, crea la página siguiendo exactamente esa propuesta."
+        ]
+      }
+    ]
+  },
+  {
+    n: 5,
+    kicker: "Inteligencia temporal",
+    title: "Acumulados y comparativas interanuales",
+    objetivo: "Crear Ventas YTD (ventas acumuladas a lo largo del año) y una comparativa contra el año anterior: Ventas LY, Variación € y Variación %.",
+    acceptance: [
+      "Obtienes las medidas YTD, LY, Variación € y Variación % sin errores de contexto temporal.",
+      "Las comparativas tienen sentido al filtrar por año/mes y no devuelven resultados incoherentes."
+    ],
+    prompts: [
+      "Quiero realizar análisis con inteligencia temporal, ayúdame a crear varias medidas que me permitan conocer más detalle sobre las ventas: variaciones año a año, acumulados anuales y mensuales, variación en importe y en %."
+    ]
+  },
+  {
+    n: 6,
+    kicker: "Rankings",
+    title: "Top N y clasificaciones",
+    objetivo: "Crear Top N de productos, un ranking de clientes y una clasificación de comerciales, y obtener recomendaciones de qué visuales usar para mostrarlo.",
+    acceptance: [
+      "El Top N y los rankings responden bien a filtros y segmentadores habituales del informe.",
+      "Recibes recomendaciones de visuales aplicables y concretas para implementar en la página."
+    ],
+    prompts: [
+      "Crea una medida para Top N productos vendidos y un ranking de clientes. Recomiéndame también qué visuales usar para mostrarlos, y dame el detalle de cómo utilizar esas medidas en mi informe."
+    ]
+  },
+  {
+    n: 7,
+    kicker: "Auditoría",
+    title: "Actuar como arquitecto Power BI",
+    objetivo: "Pedir al MCP que actúe como arquitecto Power BI e identifique problemas, riesgos y mejoras potenciales del modelo.",
+    acceptance: [
+      "Devuelve una tabla priorizada con problemas, impacto y riesgo de cada mejora propuesta.",
+      "Las recomendaciones son accionables y separan quick wins de cambios estructurales."
+    ],
+    prompts: [
+      "Actúa como arquitecto Power BI, e identifica problemas, riesgos y mejoras potenciales. Recopila toda la información en una tabla en la que se indique el impacto y el riesgo de cada uno de los cambios que propones."
+    ]
+  },
+  {
+    n: 8,
+    kicker: "Modelado avanzado",
+    title: "Dos fechas, una tabla de hechos",
+    objetivo: "Analizar FechaPedido y FechaEntrega dentro de la tabla de hechos. Debatir relaciones activas, inactivas y el uso de USERELATIONSHIP.",
+    acceptance: [
+      "Queda claro cuándo usar FechaPedido vs FechaEntrega y cómo cambia el resultado del análisis.",
+      "La explicación de relaciones activas/inactivas y USERELATIONSHIP es comprensible para perfil junior."
+    ],
+    prompts: [
+      "En la tabla de hechos hay dos fechas, fecha de pedido y fecha de entrega. Haz los ajustes necesarios para poder analizar la información por ambas fechas, y dime cómo debería realizar los análisis como si fuese un desarrollador de Power BI junior que acaba de empezar."
+    ]
+  },
+  {
+    n: 9,
+    kicker: "Refactorización",
+    title: "Convención de nombres y orden",
+    objetivo: "Proponer una convención de nombres y una organización de las medidas en carpetas, y aplicarla al modelo una vez validada.",
+    acceptance: [
+      "La convención de nombres es consistente, legible y fácil de mantener por el equipo.",
+      "Las medidas quedan ordenadas en carpetas funcionales y se nota mejora clara de navegabilidad."
+    ],
+    prompts: [
+      "Propón una convención de nombres y una organización de las medidas en carpetas, propónla primero y si es correcta la aplicaremos."
+    ]
+  },
+  {
+    n: 10,
+    kicker: "Documentación",
+    title: "Documentación funcional del modelo",
+    objetivo: "Generar documentación funcional completa de tablas, relaciones, medidas, reglas de negocio y casos de uso — y comparar el tiempo invertido frente a una documentación manual.",
+    acceptance: [
+      "Se genera un .md utilizable con trazabilidad de origen de datos y uso en el informe.",
+      "Incluye descripción funcional, casos de uso y próximos pasos sin quedarse en texto genérico."
+    ],
+    prompts: [
+      "Genera documentación funcional completa en un fichero .md de tablas, relaciones, medidas, reglas de negocio y casos de uso. Necesito que se tenga trazabilidad de dónde vienen los datos (origen) y cómo se usan en el informe. Además de una descripción funcional de las tablas, las columnas, medidas y cálculos y una descripción general de lo que se muestra en las diferentes páginas del informe. Así como una propuesta de evolución del cuadro de mandos con próximos pasos."
+    ]
+  }
+];
 
-							<p>Tincidunt eu elit diam magnis pretium accumsan etiam id urna. Ridiculus
-							ultricies curae quis et rhoncus velit. Lobortis elementum aliquet nec vitae
-							laoreet eget cubilia quam non etiam odio tincidunt montes. Elementum sem
-							parturient nulla quam placerat viverra mauris non cum elit tempus ullamcorper
-							dolor. Libero rutrum ut lacinia donec curae mus vel quisque sociis nec
-							ornare iaculis.</p>
+const state = {}; // in-memory only, resets on reload
+EXERCISES.forEach(e => state[e.n] = false);
+state['prep-0'] = false;
+state['prep-1'] = false;
 
-						</div>
-					</section>
+const listEl = document.getElementById('exerciseList');
+const railNodes = document.getElementById('railNodes');
+const schemaNodes = document.getElementById('schemaNodes');
+const railFill = document.getElementById('railFill');
+const doneCountEl = document.getElementById('doneCount');
+const totalCountEl = document.getElementById('totalCount');
+totalCountEl.textContent = EXERCISES.length;
 
-					
-				<!-- Contact -->
-					<section id="contact" class="four">
-						<div class="container">
+function updateProgress(){
+  const done = EXERCISES.filter(e => state[e.n]).length;
+  doneCountEl.textContent = done;
+  const pct = (done / EXERCISES.length) * 100;
+  railFill.style.width = pct + '%';
 
-							<header>
-								<h2>Escribeme</h2>
-							</header>
+  EXERCISES.forEach((e, i) => {
+    const rn = document.getElementById('railnode-' + e.n);
+    const sn = document.getElementById('schemanode-' + e.n);
+    const card = document.getElementById('exercise-' + e.n);
+    const check = document.getElementById('done-check-' + e.n);
+    if(state[e.n]){
+      rn.classList.add('done');
+      sn.setAttribute('fill', 'var(--yellow)');
+      sn.setAttribute('stroke', 'var(--yellow)');
+      card.classList.add('is-done');
+      check.parentElement.classList.add('is-checked');
+    } else {
+      rn.classList.remove('done');
+      sn.setAttribute('fill', '#171b27');
+      sn.setAttribute('stroke', '#2a3145');
+      card.classList.remove('is-done');
+      check.parentElement.classList.remove('is-checked');
+    }
+  });
+}
 
-							<p>Elementum sem parturient nulla quam placerat viverra
-							mauris non cum elit tempus ullamcorper dolor. Libero rutrum ut lacinia
-							donec curae mus. Eleifend id porttitor ac ultricies lobortis sem nunc
-							orci ridiculus faucibus a consectetur. Porttitor curae mauris urna mi dolor.</p>
+// build rail + schema nodes
+EXERCISES.forEach((e, i) => {
+  const x = 40 + (i * (860 / (EXERCISES.length - 1)));
 
-							<form method="post" action="#">
-								<div class="row">
-									<div class="col-6 col-12-mobile"><input type="text" name="name" placeholder="Name" /></div>
-									<div class="col-6 col-12-mobile"><input type="text" name="email" placeholder="Email" /></div>
-									<div class="col-12">
-										<textarea name="message" placeholder="Message"></textarea>
-									</div>
-									<div class="col-12">
-										<input type="submit" value="Send Message" />
-									</div>
-								</div>
-							</form>
+  const rn = document.createElement('div');
+  rn.className = 'rail-node';
+  rn.id = 'railnode-' + e.n;
+  rn.innerHTML = e.n + '<span class="tip">' + e.title + '</span>';
+  rn.addEventListener('click', () => {
+    document.getElementById('exercise-' + e.n).scrollIntoView({behavior:'smooth', block:'start'});
+    openExercise(e.n);
+  });
+  railNodes.appendChild(rn);
 
-						</div>
-					</section>
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.innerHTML = `
+    <circle id="schemanode-${e.n}" cx="${x}" cy="75" r="15" fill="#171b27" stroke="#2a3145" stroke-width="2" style="cursor:pointer"/>
+    <text x="${x}" y="80" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="#e9ebf3" style="pointer-events:none">${e.n}</text>
+    <text x="${x}" y="112" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#9299b3" style="pointer-events:none">${e.kicker}</text>
+  `;
+  g.style.cursor = 'pointer';
+  g.addEventListener('click', () => {
+    document.getElementById('exercise-' + e.n).scrollIntoView({behavior:'smooth', block:'start'});
+    openExercise(e.n);
+  });
+  schemaNodes.appendChild(g);
+});
 
-			</div>
+function openExercise(n){
+  const card = document.getElementById('exercise-' + n);
+  if(!card.classList.contains('open')) card.classList.add('open');
+}
 
-		<!-- Footer -->
-			<div id="footer">
+// build exercise cards
+const promptMap = {};
+let promptCounter = 0;
 
-				<!-- Copyright -->
-					<ul class="copyright">
-						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-					</ul>
+function renderPrompt(text){
+  const id = 'p' + (promptCounter++);
+  promptMap[id] = text;
+  return `
+    <div class="prompt-block">
+      <span class="qmark">&rdquo;</span>
+      <p>${text}</p>
+      <button class="copy-btn" data-copy="${id}">Copiar</button>
+    </div>
+  `;
+}
 
-			</div>
+EXERCISES.forEach(e => {
+  const card = document.createElement('div');
+  card.className = 'exercise';
+  card.id = 'exercise-' + e.n;
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+  let tasksHtml = '';
+  if(e.phases){
+    tasksHtml = e.phases.map(phase => `
+      <div class="ex-tasks">
+        <div class="taskhead">${phase.label}</div>
+        ${phase.prompts.map(renderPrompt).join('')}
+      </div>
+    `).join('');
+  } else {
+    tasksHtml = `
+      <div class="ex-tasks">
+        <div class="taskhead">Prompts sugeridos</div>
+        ${e.prompts.map(renderPrompt).join('')}
+      </div>
+    `;
+  }
 
-	</body>
+  const acceptanceHtml = e.acceptance?.length ? `
+    <div class="ex-accept">
+      <div class="head">¿Qué respuesta deberías esperar?</div>
+      <ul>
+        ${e.acceptance.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+    </div>
+  ` : '';
+
+  card.innerHTML = `
+    <div class="exercise-head" data-toggle="${e.n}">
+      <div class="ex-num">${e.n}</div>
+      <div class="ex-titles">
+        <div class="kicker">${e.kicker}</div>
+        <h3>${e.title}</h3>
+      </div>
+      <div class="ex-toggle">+</div>
+    </div>
+    <div class="exercise-body">
+      <div class="exercise-inner">
+        <p class="ex-objetivo"><b>Objetivo.</b> ${e.objetivo}</p>
+        ${tasksHtml}
+        ${acceptanceHtml}
+        <div class="ex-footer">
+          <label class="mark-done">
+            <input type="checkbox" id="done-check-${e.n}">
+            <span>Marcar ejercicio ${e.n} como completado</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  `;
+  listEl.appendChild(card);
+});
+
+// event delegation: toggle open/close
+document.querySelectorAll('[data-toggle]').forEach(head => {
+  head.addEventListener('click', (ev) => {
+    if(ev.target.closest('.copy-btn') || ev.target.closest('.mark-done')) return;
+    head.closest('.exercise').classList.toggle('open');
+  });
+});
+
+// copy buttons
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', async (ev) => {
+    ev.stopPropagation();
+    const text = promptMap[btn.dataset.copy];
+    try{
+      await navigator.clipboard.writeText(text);
+    } catch(err){
+      // fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    const original = btn.textContent;
+    btn.textContent = 'Copiado ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1600);
+  });
+});
+
+// done checkboxes
+EXERCISES.forEach(e => {
+  const check = document.getElementById('done-check-' + e.n);
+  check.addEventListener('change', (ev) => {
+    ev.stopPropagation();
+    state[e.n] = check.checked;
+    updateProgress();
+  });
+  check.addEventListener('click', (ev) => ev.stopPropagation());
+});
+
+// prep checklist
+document.querySelectorAll('[data-check]').forEach(label => {
+  const input = label.querySelector('input');
+  input.addEventListener('change', () => {
+    label.classList.toggle('checked', input.checked);
+  });
+});
+
+// reset
+document.getElementById('resetBtn').addEventListener('click', () => {
+  EXERCISES.forEach(e => {
+    state[e.n] = false;
+    document.getElementById('done-check-' + e.n).checked = false;
+    document.getElementById('exercise-' + e.n).classList.remove('open');
+  });
+  document.querySelectorAll('[data-check]').forEach(label => {
+    label.querySelector('input').checked = false;
+    label.classList.remove('checked');
+  });
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+// open first exercise by default
+openExercise(1);
+updateProgress();
+</script>
+</body>
 </html>
