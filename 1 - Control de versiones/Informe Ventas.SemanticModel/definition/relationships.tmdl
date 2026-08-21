@@ -1,0 +1,28 @@
+relationship AutoDetected_7bf511f4-a7a7-4cee-ba0f-c121da89ea5b
+	crossFilteringBehavior: bothDirections
+	fromColumn: FactVentas.CanalKey
+	toColumn: DimCanal.CanalKey
+
+relationship AutoDetected_1820ce02-f130-4807-acfe-3ba58b69aa72
+	crossFilteringBehavior: bothDirections
+	fromColumn: FactVentas.ClienteKey
+	toColumn: DimCliente.ClienteKey
+
+relationship AutoDetected_b15912df-f158-493a-84d9-f03efae4d7e5
+	fromColumn: FactVentas.ComercialKey
+	toColumn: DimComercial.ComercialKey
+
+relationship AutoDetected_b245f861-ebf1-4081-94cf-28a93f280603
+	crossFilteringBehavior: bothDirections
+	fromColumn: FactVentas.ProductoKey
+	toColumn: DimProducto.ProductoKey
+
+relationship 508bbb9f-228d-93f0-c546-033d80962f53
+	fromColumn: FactVentas.FechaPedidoKey
+	toColumn: DimFecha.FechaKey
+
+relationship Rel_FactVentas_FechaEntrega
+	isActive: false
+	fromColumn: FactVentas.FechaEntregaKey
+	toColumn: DimFecha.FechaKey
+

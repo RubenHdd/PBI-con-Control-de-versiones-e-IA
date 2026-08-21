@@ -1,0 +1,35 @@
+table DimCanal
+	lineageTag: f546c5fc-955b-4dce-91a5-9cf563b88cce
+
+	column CanalKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 99a930ab-4541-4b65-8dc1-84f237dae477
+		summarizeBy: none
+		sourceColumn: CanalKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Canal
+		dataType: string
+		lineageTag: 66848890-5378-4872-8d37-e3b26fca43b9
+		summarizeBy: none
+		sourceColumn: Canal
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimCanal = m
+		mode: import
+		source =
+				let
+				    Origen = Excel.Workbook(File.Contents("C:\Users\rhermosod\Downloads\Taller_PowerBI_IA_Datos_v2.xlsx"), null, true),
+				    DimCanal_Sheet = Origen{[Item="DimCanal",Kind="Sheet"]}[Data],
+				    #"Encabezados promovidos" = Table.PromoteHeaders(DimCanal_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Encabezados promovidos",{{"CanalKey", Int64.Type}, {"Canal", type text}})
+				in
+				    #"Tipo cambiado"
+
+	annotation PBI_ResultType = Table
+

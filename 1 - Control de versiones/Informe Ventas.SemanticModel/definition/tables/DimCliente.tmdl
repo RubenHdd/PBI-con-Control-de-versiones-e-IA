@@ -1,0 +1,51 @@
+table DimCliente
+	lineageTag: d8276253-ef2c-46d5-85fd-210657a4aedd
+
+	column ClienteKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 695dddcc-7cff-44bd-a9a7-4f973c2d4247
+		summarizeBy: none
+		sourceColumn: ClienteKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cliente
+		dataType: string
+		lineageTag: 1e5c9657-40e8-4e05-a042-c16a8ba40071
+		summarizeBy: none
+		sourceColumn: Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Segmento
+		dataType: string
+		lineageTag: b454dae4-7713-412b-9061-7f43b07773bc
+		summarizeBy: none
+		sourceColumn: Segmento
+
+		annotation SummarizationSetBy = Automatic
+
+	column Provincia
+		dataType: string
+		lineageTag: dd87d94f-fd9f-4981-8f48-604e8f747267
+		summarizeBy: none
+		sourceColumn: Provincia
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimCliente = m
+		mode: import
+		source =
+				let
+				    Origen = Excel.Workbook(File.Contents("C:\Users\rhermosod\Downloads\Taller_PowerBI_IA_Datos_v2.xlsx"), null, true),
+				    DimCliente_Sheet = Origen{[Item="DimCliente",Kind="Sheet"]}[Data],
+				    #"Encabezados promovidos" = Table.PromoteHeaders(DimCliente_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Encabezados promovidos",{{"ClienteKey", Int64.Type}, {"Cliente", type text}, {"Segmento", type text}, {"Provincia", type text}})
+				in
+				    #"Tipo cambiado"
+
+	annotation PBI_ResultType = Table
+

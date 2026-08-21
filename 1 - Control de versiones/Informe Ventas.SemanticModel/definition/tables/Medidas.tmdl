@@ -1,0 +1,175 @@
+table Medidas
+	lineageTag: 0a696d95-bd51-4192-986e-7626c833377e
+
+	measure Ventas = SUM(FactVentas[ImporteVenta])
+		formatString: #,0.00 €
+		displayFolder: 00_Base\Pedido
+		lineageTag: f06a6692-d36a-4784-9fcb-5f08a7941abf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Coste = SUM(FactVentas[Coste])
+		formatString: #,0.00 €
+		displayFolder: 00_Base\Pedido
+		lineageTag: fb15ba71-8e7b-4e5a-8dae-9d91fee342c4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Unidades = SUM(FactVentas[Unidades])
+		formatString: 0
+		displayFolder: 00_Base\Pedido
+		lineageTag: f08eb35e-8b03-4580-93fa-89b928de8634
+
+	measure 'Margen %' = DIVIDE([Margen],[Ventas])
+		formatString: 0.00%
+		displayFolder: 00_Base\Pedido
+		lineageTag: 2a278e4a-853e-4536-8c53-d08d49b5f272
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Margen = [Ventas]-[Coste]
+		formatString: #,0.00 €
+		displayFolder: 00_Base\Pedido
+		lineageTag: c0ead7d7-b99d-4e21-bbf2-04188a921a5e
+
+	measure 'Ticket Medio' = DIVIDE([Ventas],DISTINCTCOUNT(FactVentas[VentaId]))
+		formatString: #,0.00 €
+		displayFolder: 00_Base\Pedido
+		lineageTag: 87db82b7-58af-4c0a-8672-8f707cd8967e
+
+	measure 'Ventas PY (Pedido)' = CALCULATE([Ventas], SAMEPERIODLASTYEAR(DimFecha[Fecha]))
+		formatString: #,0.00 €
+		displayFolder: 10_Tiempo\Pedido
+		lineageTag: 96c3d3df-0bc0-479a-b8f8-0f6b43e9b1a1
+
+	measure 'Var Ventas YoY € (Pedido)' = [Ventas] - [Ventas PY (Pedido)]
+		formatString: #,0.00 €
+		displayFolder: 20_Variaciones\Pedido\YoY
+		lineageTag: 21a2116c-c1da-4f58-b948-285f8c4b3311
+
+	measure 'Var Ventas YoY % (Pedido)' = DIVIDE([Var Ventas YoY € (Pedido)], [Ventas PY (Pedido)])
+		formatString: 0.00%
+		displayFolder: 20_Variaciones\Pedido\YoY
+		lineageTag: b1144906-0dab-4bf3-af37-03fb34314600
+
+	measure 'Ventas Mes Anterior (Pedido)' = CALCULATE([Ventas], DATEADD(DimFecha[Fecha], -1, MONTH))
+		formatString: #,0.00 €
+		displayFolder: 10_Tiempo\Pedido
+		lineageTag: db675169-ef1c-4495-9db8-6b0695df4945
+
+	measure 'Var Ventas MoM € (Pedido)' = [Ventas] - [Ventas Mes Anterior (Pedido)]
+		formatString: #,0.00 €
+		displayFolder: 20_Variaciones\Pedido\MoM
+		lineageTag: e059be9a-535b-4467-9601-6c066c587d07
+
+	measure 'Var Ventas MoM % (Pedido)' = DIVIDE([Var Ventas MoM € (Pedido)], [Ventas Mes Anterior (Pedido)])
+		formatString: 0.00%
+		displayFolder: 20_Variaciones\Pedido\MoM
+		lineageTag: cfa21bae-296a-4729-a361-5347b2e1cb06
+
+	measure 'Ventas YTD (Pedido)' = TOTALYTD([Ventas], DimFecha[Fecha])
+		formatString: #,0.00 €
+		displayFolder: 10_Tiempo\Pedido
+		lineageTag: 13cde4c5-cf48-40bf-a93f-20110fd4084d
+
+	measure 'Ventas MTD (Pedido)' = TOTALMTD([Ventas], DimFecha[Fecha])
+		formatString: #,0.00 €
+		displayFolder: 10_Tiempo\Pedido
+		lineageTag: 05d367d8-6f56-47ba-afc8-88ba95d81235
+
+	measure 'Rank Producto por Unidades' = RANKX(ALLSELECTED(DimProducto[Producto]), [Unidades],, DESC, DENSE)
+		formatString: 0
+		displayFolder: 30_Ranking y TopN
+		lineageTag: 06a038b1-bbd3-4c65-893d-a8c8a1a31762
+
+	measure 'TopN Producto por Unidades (N=10)' = IF([Rank Producto por Unidades] <= 10, [Unidades], BLANK())
+		formatString: 0
+		displayFolder: 30_Ranking y TopN
+		lineageTag: b50e1f64-cd09-4e8f-be7e-cd23339ffc64
+
+	measure 'Rank Cliente por Ventas' = RANKX(ALLSELECTED(DimCliente[Cliente]), [Ventas],, DESC, DENSE)
+		formatString: 0
+		displayFolder: 30_Ranking y TopN
+		lineageTag: b4092464-ebe2-469c-a8d3-3b2bb9d73d77
+
+	measure 'Ventas (Entrega)' = CALCULATE([Ventas], USERELATIONSHIP(FactVentas[FechaEntregaKey], DimFecha[FechaKey]))
+		formatString: #,0.00 €
+		displayFolder: 00_Base\Entrega
+		lineageTag: 9d092a4f-0db4-4c28-aa25-611d59219ee9
+
+	measure 'Coste (Entrega)' = CALCULATE([Coste], USERELATIONSHIP(FactVentas[FechaEntregaKey], DimFecha[FechaKey]))
+		formatString: #,0.00 €
+		displayFolder: 00_Base\Entrega
+		lineageTag: 1ae679f3-bdec-4789-a958-d7f3c6028ebd
+
+	measure 'Margen (Entrega)' = [Ventas (Entrega)] - [Coste (Entrega)]
+		formatString: #,0.00 €
+		displayFolder: 00_Base\Entrega
+		lineageTag: 52a1a848-320c-458e-a4c0-25af06c2e20e
+
+	measure 'Margen % (Entrega)' = DIVIDE([Margen (Entrega)], [Ventas (Entrega)])
+		formatString: 0.00%
+		displayFolder: 00_Base\Entrega
+		lineageTag: 38c94ca7-eaf6-4a9a-88dd-4c1ca8d497f8
+
+	measure 'Unidades (Entrega)' = CALCULATE([Unidades], USERELATIONSHIP(FactVentas[FechaEntregaKey], DimFecha[FechaKey]))
+		formatString: 0
+		displayFolder: 00_Base\Entrega
+		lineageTag: 0c30ddba-dde9-4eda-a270-37ff6890e7ee
+
+	measure 'Ticket Medio (Entrega)' = DIVIDE([Ventas (Entrega)], CALCULATE(DISTINCTCOUNT(FactVentas[VentaId]), USERELATIONSHIP(FactVentas[FechaEntregaKey], DimFecha[FechaKey])))
+		formatString: #,0.00 €
+		displayFolder: 00_Base\Entrega
+		lineageTag: 29bfa401-4177-40f4-be10-d3b53d366e49
+
+	measure 'Ventas YTD (Entrega)' = TOTALYTD([Ventas (Entrega)], DimFecha[Fecha])
+		formatString: #,0.00 €
+		displayFolder: 10_Tiempo\Entrega
+		lineageTag: d1e65157-c419-444e-9f2e-aad287e0f7bc
+
+	measure 'Ventas MTD (Entrega)' = TOTALMTD([Ventas (Entrega)], DimFecha[Fecha])
+		formatString: #,0.00 €
+		displayFolder: 10_Tiempo\Entrega
+		lineageTag: 771c21a9-d487-411d-be4a-2cd9b9b3f8c2
+
+	measure 'Ventas PY (Entrega)' = CALCULATE([Ventas (Entrega)], SAMEPERIODLASTYEAR(DimFecha[Fecha]))
+		formatString: #,0.00 €
+		displayFolder: 10_Tiempo\Entrega
+		lineageTag: 5f4b733c-ec24-47a8-a2f2-0c2d51ea6f8e
+
+	measure 'Var Ventas YoY € (Entrega)' = [Ventas (Entrega)] - [Ventas PY (Entrega)]
+		formatString: #,0.00 €
+		displayFolder: 20_Variaciones\Entrega\YoY
+		lineageTag: 35d9ee7c-eee0-46ee-9aaf-735935671761
+
+	measure 'Var Ventas YoY % (Entrega)' = DIVIDE([Var Ventas YoY € (Entrega)], [Ventas PY (Entrega)])
+		formatString: 0.00%
+		displayFolder: 20_Variaciones\Entrega\YoY
+		lineageTag: ba2509a5-d8a7-4628-a897-eef4801f3ec3
+
+	measure 'Var Ventas Pedido vs Entrega €' = [Ventas] - [Ventas (Entrega)]
+		formatString: #,0.00 €
+		displayFolder: 20_Variaciones\Comparativas Pedido vs Entrega
+		lineageTag: d53241b3-4955-4054-a6d5-4cfecdafa4e8
+
+	measure 'Var Ventas Pedido vs Entrega %' = DIVIDE([Var Ventas Pedido vs Entrega €], [Ventas])
+		formatString: 0.00%
+		displayFolder: 20_Variaciones\Comparativas Pedido vs Entrega
+		lineageTag: 1c84a922-14c3-41e1-8e76-5d83ec864bd6
+
+	column Value
+		isHidden
+		formatString: 0
+		lineageTag: b5f664cc-1028-4f18-a5b4-12d86b53967e
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Medidas = calculated
+		mode: import
+		source = { BLANK() }
+
+	annotation PBI_Id = 89bef75bfe6e40d497054745e21d18af
+

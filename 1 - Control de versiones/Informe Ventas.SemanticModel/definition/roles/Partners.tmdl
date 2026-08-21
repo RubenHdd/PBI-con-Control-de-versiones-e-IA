@@ -1,0 +1,7 @@
+role Partners
+	modelPermission: read
+
+	tablePermission DimCanal = [Canal] == "Partner"
+
+	annotation PBI_Id = cfd5c12f5d11435189123685ed499f62
+

@@ -1,0 +1,116 @@
+table FactVentas
+	lineageTag: bc104182-86a1-4b42-ad38-3eb9eaa0b671
+
+	column VentaId
+		dataType: int64
+		formatString: 0
+		lineageTag: 62c9df87-787e-4c6d-a4e8-555baa342fbc
+		summarizeBy: count
+		sourceColumn: VentaId
+
+		annotation SummarizationSetBy = Automatic
+
+	column FechaPedidoKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 6641d047-a356-4fd2-8d99-48a42049cca2
+		summarizeBy: none
+		sourceColumn: FechaPedidoKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column FechaEntregaKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 4fe203d5-ee59-4667-a1c2-d01b3f9c09dc
+		summarizeBy: count
+		sourceColumn: FechaEntregaKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ClienteKey
+		dataType: int64
+		formatString: 0
+		lineageTag: cfc48235-5632-436c-b915-cf7f633187fd
+		summarizeBy: none
+		sourceColumn: ClienteKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductoKey
+		dataType: int64
+		formatString: 0
+		lineageTag: d507653b-a544-434d-9421-4afaa5c5c680
+		summarizeBy: none
+		sourceColumn: ProductoKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CanalKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 92cde1aa-fcb4-41c6-bbe2-51c81ebee53c
+		summarizeBy: none
+		sourceColumn: CanalKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column ComercialKey
+		dataType: int64
+		formatString: 0
+		lineageTag: d27f889c-4332-4f86-a5bf-5407c9264bbf
+		summarizeBy: none
+		sourceColumn: ComercialKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidades
+		dataType: int64
+		formatString: 0
+		lineageTag: ea9f4163-0250-4f55-9719-01b14da92bf5
+		summarizeBy: sum
+		sourceColumn: Unidades
+
+		annotation SummarizationSetBy = Automatic
+
+	column ImporteVenta
+		dataType: double
+		lineageTag: 37228d5e-7114-4202-869f-25fabf1f4eb9
+		summarizeBy: sum
+		sourceColumn: ImporteVenta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Coste
+		dataType: double
+		lineageTag: c06685a7-3e6a-47a9-aa31-2d805487b232
+		summarizeBy: sum
+		sourceColumn: Coste
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition FactVentas = m
+		mode: import
+		source =
+				let
+				    Origen = Excel.Workbook(File.Contents("C:\Users\rhermosod\Downloads\Taller_PowerBI_IA_Datos_v2.xlsx"), null, true),
+				    FactVentas_Sheet = Origen{[Item="FactVentas",Kind="Sheet"]}[Data],
+				    #"Encabezados promovidos" = Table.PromoteHeaders(FactVentas_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Encabezados promovidos",{{"VentaId", Int64.Type}, {"FechaPedidoKey", Int64.Type}, {"FechaEntregaKey", Int64.Type}, {"ClienteKey", Int64.Type}, {"ProductoKey", Int64.Type}, {"CanalKey", Int64.Type}, {"ComercialKey", Int64.Type}, {"Unidades", Int64.Type}, {"ImporteVenta", type number}, {"Coste", type number}})
+				in
+				    #"Tipo cambiado"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

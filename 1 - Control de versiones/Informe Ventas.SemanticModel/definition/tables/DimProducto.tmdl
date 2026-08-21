@@ -1,0 +1,51 @@
+table DimProducto
+	lineageTag: 4cb19bb2-f7de-422c-bd8a-3bf2cb640480
+
+	column ProductoKey
+		dataType: int64
+		formatString: 0
+		lineageTag: a4e3be52-9838-4626-b29a-2ed12940bf15
+		summarizeBy: none
+		sourceColumn: ProductoKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Producto
+		dataType: string
+		lineageTag: 90c8ea71-8eb2-485c-b115-beae60028124
+		summarizeBy: none
+		sourceColumn: Producto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Categoria
+		dataType: string
+		lineageTag: 0a8e3a0b-18c0-4d59-ab7a-0ef3d7bb7957
+		summarizeBy: none
+		sourceColumn: Categoria
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subcategoria
+		dataType: string
+		lineageTag: 9656c541-0bda-4cbe-8195-a2dbf47adf07
+		summarizeBy: none
+		sourceColumn: Subcategoria
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimProducto = m
+		mode: import
+		source =
+				let
+				    Origen = Excel.Workbook(File.Contents("C:\Users\rhermosod\Downloads\Taller_PowerBI_IA_Datos_v2.xlsx"), null, true),
+				    DimProducto_Sheet = Origen{[Item="DimProducto",Kind="Sheet"]}[Data],
+				    #"Encabezados promovidos" = Table.PromoteHeaders(DimProducto_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Encabezados promovidos",{{"ProductoKey", Int64.Type}, {"Producto", type text}, {"Categoria", type text}, {"Subcategoria", type text}})
+				in
+				    #"Tipo cambiado"
+
+	annotation PBI_ResultType = Table
+

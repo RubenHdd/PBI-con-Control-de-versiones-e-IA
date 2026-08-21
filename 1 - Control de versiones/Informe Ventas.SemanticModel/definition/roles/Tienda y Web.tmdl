@@ -1,0 +1,7 @@
+role 'Tienda y Web'
+	modelPermission: read
+
+	tablePermission DimCanal = [Canal] == "Tienda" || [Canal] == "Web"
+
+	annotation PBI_Id = f201cbadbe004e4dabf39348f1e382f9
+
