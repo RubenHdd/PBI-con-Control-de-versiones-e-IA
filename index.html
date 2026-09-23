@@ -70,8 +70,13 @@
     .section-title h2 { margin: 6px 0 0; font-size: clamp(25px, 3vw, 36px); letter-spacing: 0; line-height: 1.15; }
     .section-title p { max-width: 470px; margin: 0; color: var(--muted); font-size: 14px; }
 
-    .notice { border-left: 4px solid var(--gold); background: var(--gold-light); padding: 14px 17px; margin: 0 0 25px; font-size: 14px; }
-    .notice strong { display: block; margin-bottom: 3px; }
+    .orientation { margin: 0 0 25px; padding: 20px 22px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); }
+    .orientation h3 { margin: 0 0 7px; font-size: 18px; }
+    .orientation > p { margin: 0; color: var(--muted); font-size: 14px; }
+    .tool-glossary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 17px; }
+    .tool-glossary div { padding: 12px; background: #f8f7f2; border-left: 3px solid var(--teal); }
+    .tool-glossary b { display: block; margin-bottom: 3px; font-size: 13px; }
+    .tool-glossary span { display: block; color: var(--muted); font-size: 12px; line-height: 1.45; }
     .flow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .flow.steps { grid-template-columns: 1fr; }
     .setup-sequence { display: block; }
@@ -149,6 +154,7 @@
       .hero { padding: 48px 0 35px; }
       .lead { font-size: 16px; }
       .flow, .connection { grid-template-columns: 1fr; }
+      .tool-glossary { grid-template-columns: 1fr 1fr; }
       .setup-card.wide { grid-column: span 1; }
       .section-title, .workshop-head { display: block; }
       .section-title p { margin-top: 12px; }
@@ -178,7 +184,7 @@
       <div class="shell">
         <div class="eyebrow">Power BI Modeling MCP Server · VS Code</div>
         <h1>Conecta tu modelo.<br><em>Después, ponlo a prueba.</em></h1>
-        <p class="lead">Una única página para preparar MCP en Visual Studio Code y practicar con un modelo Power BI real. Primero dejas la conexión lista; después trabajas los diez ejercicios a tu ritmo.</p>
+        <p class="lead">Una guía práctica para preparar tu equipo y usar IA con un modelo Power BI. No necesitas conocer MCP, Git o Visual Studio Code: te explicamos qué es cada cosa y qué hacer en cada paso.</p>
         <div class="route">
           <a class="primary" href="#conexion" data-view="setup">Preparar conexión</a>
           <a href="#taller" data-view="workshop">Ir al taller</a>
@@ -193,21 +199,27 @@
             <div class="eyebrow">Bloque 1 · Preparación</div>
             <h2 id="setup-title">Instala, abre y verifica la conexión</h2>
           </div>
-          <p>Sigue los pasos en orden. Al terminar podrás conectar a un informe abierto en Power BI Desktop o directamente a los archivos de un proyecto PBIP.</p>
+          <p>Sigue los pasos de arriba abajo. Al terminar podrás pedir a Copilot que lea tu modelo Power BI y empezar los ejercicios.</p>
         </div>
 
-        <aside class="notice">
-          <strong>Antes de empezar: trabaja sobre una copia o una rama.</strong>
-          MCP puede consultar y modificar el modelo. Comprueba cada propuesta antes de aceptarla y guarda el informe desde Power BI Desktop antes de cerrarlo.
-        </aside>
+        <section class="orientation" aria-labelledby="orientation-title">
+          <h3 id="orientation-title">Qué vas a usar</h3>
+          <p>Son cuatro herramientas que trabajan juntas. No tienes que configurar nada manualmente fuera de los pasos de esta página.</p>
+          <div class="tool-glossary">
+            <div><b>Power BI Desktop</b><span>La aplicación donde abres y ves el informe.</span></div>
+            <div><b>Visual Studio Code</b><span>El editor desde el que hablarás con Copilot.</span></div>
+            <div><b>GitHub Copilot Chat</b><span>El asistente de IA al que escribirás tus preguntas.</span></div>
+            <div><b>MCP</b><span>La conexión que permite a Copilot leer el modelo Power BI.</span></div>
+          </div>
+        </section>
 
         <div class="setup-sequence">
           <article class="setup-card">
             <div class="step-label">Paso 1 · Requisitos base</div>
-            <h3>Comprueba Git y Copilot Chat</h3>
-            <p>Instala <a href="https://git-scm.com/downloads" target="_blank" rel="noopener"><b>Git</b> desde su página oficial</a>, o usa el método de instalación permitido en tu equipo. Es necesario para instalar el plugin de autoría y te permitirá revisar los cambios del proyecto. Reinicia VS Code después de instalarlo.</p>
+            <h3>Instala Git y abre Copilot Chat</h3>
+            <p><b>Git</b> es una herramienta que necesita el complemento de Power BI. Instálalo desde su <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">página oficial</a>, o usa el método de instalación permitido en tu equipo. Cuando termine, cierra y vuelve a abrir VS Code.</p>
             <div class="command"><code>git --version</code></div>
-            <p>En VS Code abre <b>Extensiones</b> con <code>Ctrl+Shift+X</code>, busca <b>GitHub Copilot Chat</b>, instálalo si no aparece como instalado e inicia sesión con tu cuenta con licencia.</p>
+            <p>En VS Code abre <b>Extensiones</b> con <code>Ctrl+Shift+X</code>. Busca <b>GitHub Copilot Chat</b>, instálalo si hace falta e inicia sesión. Al finalizar, comprueba que puedes abrir la ventana de chat de Copilot.</p>
             <div class="checklist">
               <label class="check"><input type="checkbox" data-prep="git"><span><code>git --version</code> muestra una versión en la terminal integrada.</span></label>
               <label class="check"><input type="checkbox" data-prep="copilot"><span>El panel de GitHub Copilot Chat se abre y reconoce tu sesión.</span></label>
@@ -216,7 +228,8 @@
 
           <article class="setup-card">
             <div class="step-label">Paso 2 · Servidor y skills</div>
-            <h3>Instala MCP y Power BI Report Authoring</h3>
+            <h3>Instala la conexión con Power BI</h3>
+            <p>Estos dos complementos se instalan dentro de VS Code. El primero conecta Copilot con Power BI; el segundo aporta ayuda especializada para crear y editar informes.</p>
             <ol>
               <li>En <b>Extensiones</b>, busca <b>Power BI Modeling MCP Server</b> e instálalo. Este es el servidor que da a Copilot acceso al modelo.
                 <img class="guide-shot" src="https://miro.medium.com/v2/resize:fit:1400/1*l1gUzGV6ygIUr9wO5yZ2XQ.png" alt="Marketplace de Visual Studio Code con Power BI Modeling MCP Server">
@@ -236,7 +249,8 @@
 
           <article class="setup-card wide">
             <div class="step-label">Paso 3 · Prepara el informe</div>
-            <h3>Activa PBIP y guarda el proyecto</h3>
+            <h3>Guarda el informe como proyecto</h3>
+            <p>Este formato permite que VS Code encuentre los archivos del informe y del modelo. Solo debes activarlo una vez en Power BI Desktop.</p>
             <ol>
               <li>En Power BI Desktop abre <b>Archivo &gt; Opciones y configuración &gt; Opciones &gt; Funciones de vista previa</b>.</li>
               <li>Activa <b>Opción de guardar proyecto de Power BI (.pbip)</b>. Activa también el formato PBIR mejorado si tu versión lo muestra.</li>
@@ -246,7 +260,7 @@
               </li>
               <li>En VS Code usa <b>Archivo &gt; Abrir carpeta</b> y selecciona la carpeta raíz que contiene el archivo <code>.pbip</code>, no la carpeta del informe ni la del modelo de forma aislada.</li>
             </ol>
-            <p>Tras guardar deberías ver el archivo <code>NombreInforme.pbip</code> y las carpetas <code>NombreInforme.Report</code> y <code>NombreInforme.SemanticModel</code>. Dentro de esta última, <code>definition</code> contiene el modelo TMDL editable.</p>
+            <p>Tras guardar verás el archivo <code>NombreInforme.pbip</code> y dos carpetas: <code>NombreInforme.Report</code> contiene el informe visual y <code>NombreInforme.SemanticModel</code> contiene los datos, relaciones y medidas. No necesitas editar estos archivos durante el taller.</p>
             <div class="checklist">
               <label class="check"><input type="checkbox" data-prep="pbip"><span>Veo el archivo <code>.pbip</code> y las dos carpetas <code>.Report</code> y <code>.SemanticModel</code> en el explorador de VS Code.</span></label>
               <label class="check"><input type="checkbox" data-prep="desktop"><span>Power BI Desktop sigue abierto con el informe correcto cargado.</span></label>
@@ -256,14 +270,14 @@
 
         <div class="setup-sequence" id="conexion">
           <article class="setup-card wide">
-            <div class="step-label">Paso 4 · Elige una única vía de conexión</div>
-            <h3>Conecta el modelo antes de continuar</h3>
-            <p>Usa una sola opción. Para el taller, la opción A es la más directa porque permite comprobar cada cambio en Power BI Desktop. La opción B sirve para trabajar directamente sobre los archivos TMDL del proyecto.</p>
+            <div class="step-label">Paso 4 · Elige cómo conectar</div>
+            <h3>Conecta Copilot con tu modelo</h3>
+            <p>Las dos opciones permiten a Copilot trabajar sobre el mismo modelo semántico. Elige <b>una sola</b>: con la opción A el cambio aparece directamente en Power BI Desktop; con la opción B el cambio se escribe en los archivos PBIP y Power BI Desktop lo sincroniza periódicamente.</p>
 
             <section class="connection-route">
               <div class="step-label">Opción A · Informe abierto en Desktop</div>
-              <h3>Conectar al informe que estás viendo</h3>
-              <p>Mantén Power BI Desktop abierto con el informe correcto. En Copilot Chat selecciona el modo <b>Agent</b> si está disponible, pega el prompt y aprueba el acceso de solo lectura cuando VS Code lo solicite.</p>
+              <h3>Usar el informe abierto</h3>
+              <p>Deja Power BI Desktop abierto con el informe correcto. Abre Copilot Chat en VS Code, selecciona <b>Agent</b> si aparece esa opción y pega el texto siguiente. Cuando VS Code te pida permiso, acepta el acceso de solo lectura.</p>
               <div class="prompt">
                 <p id="connect-prompt">Conéctate al modelo del informe que tengo abierto en Power BI Desktop, llamado «[nombre exacto del informe]». Lista las tablas, medidas y relaciones disponibles, sin modificar nada.</p>
                 <button class="copy" data-copy="connect-prompt">Copiar prompt</button>
@@ -272,8 +286,8 @@
 
             <section class="connection-route">
               <div class="step-label">Opción B · Carpeta PBIP</div>
-              <h3>Conectar a la definición del proyecto</h3>
-              <p>Usa esta vía si trabajarás sobre archivos y no necesitas abrir Power BI Desktop. Sustituye la ruta de ejemplo por la carpeta <code>definition</code> de tu modelo semántico.</p>
+              <h3>Usar los archivos del proyecto</h3>
+              <p>Conecta Copilot a los archivos del proyecto. Puedes mantener Power BI Desktop abierto: al detectar cambios en el proyecto te pedirá sincronizarlos o los sincronizará periódicamente. Si aparece un aviso de sincronización, selecciónalo antes de comprobar el resultado en el informe. Sustituye la ruta de ejemplo por la carpeta <code>definition</code> de tu modelo semántico.</p>
               <div class="command"><code>Abre el modelo semántico de esta carpeta PBIP: C:\Ruta\NombreInforme.SemanticModel\definition. Lista las tablas, medidas y relaciones disponibles, sin modificar nada.</code></div>
             </section>
 
