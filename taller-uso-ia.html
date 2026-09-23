@@ -17,12 +17,9 @@
     a { color:var(--teal); text-decoration-thickness:1px; text-underline-offset:3px; }
     .shell { width:min(1120px,calc(100% - 40px)); margin:0 auto; }
     .topbar { background:var(--night); color:#fffefa; border-bottom:3px solid var(--gold); }
-    .topbar-inner { min-height:62px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .topbar-inner { min-height:62px; display:flex; align-items:center; }
     .brand { color:inherit; font-size:15px; font-weight:800; text-decoration:none; white-space:nowrap; }
     .brand b { color:var(--gold); }
-    .topnav { display:flex; gap:20px; font-size:13px; font-weight:700; }
-    .topnav a { color:#dbe1dc; text-decoration:none; }
-    .topnav a:hover { color:var(--gold); }
     .hero { padding:64px 0 42px; border-bottom:1px solid var(--line); }
     .eyebrow { display:flex; align-items:center; gap:9px; color:var(--teal); font:500 12px var(--mono); letter-spacing:.06em; text-transform:uppercase; }
     .eyebrow::before { content:""; width:30px; height:2px; background:currentColor; }
@@ -63,17 +60,13 @@
     footer { padding:22px 0 45px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
     footer .shell { display:flex; justify-content:space-between; gap:15px; align-items:center; }
     .reset { padding:6px 9px; border:1px solid var(--line); border-radius:4px; background:var(--paper); color:var(--muted); font-size:12px; cursor:pointer; }
-    @media (max-width:700px) { .shell { width:min(100% - 28px,1120px); } .topbar-inner { min-height:54px; } .topnav { gap:12px; font-size:12px; } .hero { padding:48px 0 35px; } .lead { font-size:16px; } .workshop-head { display:block; } .progress { margin-top:20px; } .exercise-toggle { grid-template-columns:35px 1fr auto; gap:10px; padding:14px; } .exercise-content { padding:18px 14px; } .prompt-line { display:block; } .small-copy { margin-top:9px; padding:0; } }
+    @media (max-width:700px) { .shell { width:min(100% - 28px,1120px); } .topbar-inner { min-height:54px; } .hero { padding:48px 0 35px; } .lead { font-size:16px; } .workshop-head { display:block; } .progress { margin-top:20px; } .exercise-toggle { grid-template-columns:35px 1fr auto; gap:10px; padding:14px; } .exercise-content { padding:18px 14px; } .prompt-line { display:block; } .small-copy { margin-top:9px; padding:0; } }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="shell topbar-inner">
       <a class="brand" href="index.html">POWER BI <b>+</b> IA</a>
-      <nav class="topnav" aria-label="Navegación principal">
-        <a href="index.html">1. Instalar y conectar</a>
-        <a href="taller-uso-ia.html">2. Taller práctico</a>
-      </nav>
     </div>
   </header>
   <main>
