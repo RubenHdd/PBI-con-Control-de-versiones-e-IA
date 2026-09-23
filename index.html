@@ -188,9 +188,8 @@
     <div class="shell topbar-inner">
       <a class="brand" href="#inicio">POWER BI <b>+</b> IA</a>
       <nav class="topnav" aria-label="Navegación principal">
-        <a href="#conexion" data-view="setup">1. Instalar y conectar</a>
+        <a href="#setup" data-view="setup">1. Instalar y conectar</a>
         <a href="#taller" data-view="workshop">2. Taller práctico</a>
-        <a href="guia-conexion-mcp-power-bi-vscode.md">Guía completa</a>
       </nav>
     </div>
   </header>
@@ -218,7 +217,7 @@
           <p>Sigue los pasos de arriba abajo. Al terminar podrás pedir a Copilot que lea tu modelo Power BI y empezar los ejercicios.</p>
         </div>
 
-        <section class="orientation" aria-labelledby="orientation-title">
+        <section class="orientation" id="guia-rapida" aria-labelledby="orientation-title">
           <h3 id="orientation-title">Qué vas a usar</h3>
           <p>Son cuatro herramientas que trabajan juntas. No tienes que configurar nada manualmente fuera de los pasos de esta página.</p>
           <div class="tool-glossary">
@@ -507,8 +506,9 @@
         event.preventDefault();
         const view = viewLink.dataset.view;
         document.querySelectorAll('.view').forEach(item => item.classList.toggle('active', item.id === view));
-        history.replaceState(null, '', `#${view === 'setup' ? 'conexion' : 'taller'}`);
-        document.getElementById(view).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const targetId = viewLink.getAttribute('href').slice(1);
+        history.replaceState(null, '', `#${targetId}`);
+        (document.getElementById(targetId) || document.getElementById(view)).scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
       const toggle = event.target.closest('.exercise-toggle');
       if (toggle) {
