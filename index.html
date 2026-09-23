@@ -73,6 +73,15 @@
     .section-title { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-3); margin-bottom: var(--space-3); }
     .section-title h2 { margin: 6px 0 0; font-size: clamp(25px, 3vw, 36px); letter-spacing: 0; line-height: 1.15; }
     .section-title p { max-width: 470px; margin: 0; color: var(--muted); font-size: 14px; }
+    .course-intro { max-width: 760px; color: #454a45; font-size: 18px; line-height: 1.65; }
+    .course-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-2); margin-top: var(--space-4); }
+    .course-card { min-height: 240px; padding: 0 24px 24px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
+    .course-card img { display: block; width: calc(100% + 48px); height: 112px; margin: 0 -24px var(--space-2); object-fit: cover; }
+    .course-card h3 { margin: 9px 0 8px; font-size: 21px; }
+    .course-card p { margin: 0; color: var(--muted); font-size: 14px; }
+    .course-card .course-link { display: inline-block; margin-top: 18px; color: var(--teal); font-size: 13px; font-weight: 700; }
+    .course-card.ia { border-color: var(--teal); background: var(--teal-light); }
+    .course-card .status { display: inline-block; margin-top: 18px; color: var(--muted); font: 11px var(--mono); text-transform: uppercase; }
 
     .orientation { margin: 0 0 var(--space-3); padding: 20px 22px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); }
     .orientation h3 { margin: 0 0 7px; font-size: 18px; }
@@ -169,6 +178,7 @@
       .hero { padding: 48px 0 35px; }
       .lead { font-size: 16px; }
       .flow, .connection { grid-template-columns: 1fr; }
+      .course-grid { grid-template-columns: 1fr; }
       .tool-glossary { grid-template-columns: 1fr 1fr; }
       .setup-card.wide { grid-column: span 1; }
       .section-title, .workshop-head { display: block; }
@@ -188,8 +198,8 @@
     <div class="shell topbar-inner">
       <a class="brand" href="#inicio">POWER BI <b>+</b> IA</a>
       <nav class="topnav" aria-label="Navegación principal">
-        <a href="#setup" data-view="setup">1. Instalar y conectar</a>
-        <a href="taller.html">2. Taller práctico</a>
+        <a href="modulo-uso-ia.html">Uso de IA</a>
+        <a href="taller-uso-ia.html">Taller práctico</a>
       </nav>
     </div>
   </header>
@@ -197,18 +207,36 @@
   <main id="inicio">
     <section class="hero">
       <div class="shell">
-        <div class="eyebrow">Power BI Modeling MCP Server · VS Code</div>
-        <h1>Conecta tu modelo.<br><em>Después, ponlo a prueba.</em></h1>
-        <p class="lead">Una guía práctica para preparar tu equipo y usar IA con un modelo Power BI. No necesitas conocer MCP, Git o Visual Studio Code: te explicamos qué es cada cosa y qué hacer en cada paso.</p>
+        <div class="eyebrow">Formación práctica</div>
+        <h1>Aprende Power BI<br><em>paso a paso.</em></h1>
+        <p class="lead">Una ruta de aprendizaje para construir informes de Power BI con criterio: desde los datos hasta el uso de IA en el modelo semántico.</p>
         <div class="route">
-          <a class="primary" href="#conexion" data-view="setup">Preparar conexión</a>
-          <a href="taller.html">Ir al taller</a>
+          <a class="primary" href="#curso" data-view="home">Ver itinerario</a>
+          <a href="modulo-uso-ia.html">Módulo de IA</a>
         </div>
       </div>
     </section>
 
     <section class="workspace shell">
-      <div class="view active" id="setup" aria-labelledby="setup-title">
+      <div class="view active" id="home" aria-labelledby="course-title">
+        <div class="section-title" id="curso">
+          <div>
+            <div class="eyebrow">Itinerario</div>
+            <h2 id="course-title">Una formación para construir informes de principio a fin</h2>
+          </div>
+        </div>
+        <p class="course-intro">Cada módulo se centra en una parte concreta del trabajo con Power BI. El módulo de IA ya está disponible con la guía de conexión MCP y el taller práctico; el resto se irá incorporando a esta misma ruta.</p>
+        <div class="course-grid">
+          <article class="course-card"><img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80" alt="Infraestructura de conexión de datos"><div class="step-label">Módulo 1</div><h3>Conexión a datos</h3><p>Orígenes, credenciales, modos de conexión y actualización.</p><span class="status">En desarrollo</span></article>
+          <article class="course-card"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80" alt="Panel de análisis de datos"><div class="step-label">Módulo 2</div><h3>Preparación de datos</h3><p>Limpieza, tipos de datos y transformaciones con Power Query.</p><span class="status">En desarrollo</span></article>
+          <article class="course-card"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80" alt="Modelo de datos visualizado en pantalla"><div class="step-label">Módulo 3</div><h3>Modelado de datos</h3><p>Relaciones, esquema estrella, medidas DAX e inteligencia temporal.</p><span class="status">En desarrollo</span></article>
+          <article class="course-card"><img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80" alt="Equipo revisando visualizaciones"><div class="step-label">Módulo 4</div><h3>Visualización</h3><p>KPIs, diseño de páginas, filtros e interacción del informe.</p><span class="status">En desarrollo</span></article>
+          <article class="course-card"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=900&q=80" alt="Trabajo colaborativo en servicios digitales"><div class="step-label">Módulo 5</div><h3>Power BI Service</h3><p>Publicación, espacios de trabajo, permisos y actualización programada.</p><span class="status">En desarrollo</span></article>
+          <article class="course-card ia"><img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=900&q=80" alt="Tecnología de inteligencia artificial"><div class="step-label">Módulo 6 · Disponible</div><h3>Uso de IA</h3><p>Conecta Copilot mediante MCP, comprende el modelo y practica con prompts guiados.</p><a class="course-link" href="modulo-uso-ia.html">Abrir módulo de IA</a></article>
+        </div>
+      </div>
+
+      <div class="view" id="setup" aria-labelledby="setup-title">
         <div class="section-title">
           <div>
             <div class="eyebrow">Bloque 1 · Preparación</div>
