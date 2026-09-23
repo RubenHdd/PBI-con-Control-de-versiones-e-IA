@@ -47,12 +47,9 @@
 
     .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
     .topbar { background: var(--night); color: #fffefa; border-bottom: 3px solid var(--gold); }
-    .topbar-inner { min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .topbar-inner { min-height: 62px; display: flex; align-items: center; }
     .brand { font-weight: 800; letter-spacing: 0; font-size: 15px; text-decoration: none; color: inherit; white-space: nowrap; }
     .brand b { color: var(--gold); }
-    .topnav { display: flex; align-items: center; gap: 20px; font-size: 13px; font-weight: 700; }
-    .topnav a { color: #dbe1dc; text-decoration: none; }
-    .topnav a:hover { color: var(--gold); }
 
     .hero { padding: 68px 0 48px; border-bottom: 1px solid var(--line); }
     .eyebrow { display: flex; align-items: center; gap: 9px; color: var(--teal); font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
@@ -174,7 +171,6 @@
     @media (max-width: 700px) {
       .shell { width: min(100% - 28px, 1120px); }
       .topbar-inner { min-height: 54px; }
-      .topnav { gap: 12px; font-size: 12px; }
       .hero { padding: 48px 0 35px; }
       .lead { font-size: 16px; }
       .flow, .connection { grid-template-columns: 1fr; }
@@ -197,10 +193,6 @@
   <header class="topbar">
     <div class="shell topbar-inner">
       <a class="brand" href="#inicio">POWER BI <b>+</b> IA</a>
-      <nav class="topnav" aria-label="Navegación principal">
-        <a href="modulo-uso-ia.html">Uso de IA</a>
-        <a href="taller-uso-ia.html">Taller práctico</a>
-      </nav>
     </div>
   </header>
 
