@@ -1,817 +1,425 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Taller Power BI + IA · Ejercicios</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#10131c;
-    --panel:#171b27;
-    --panel-2:#1d2332;
-    --line:#2a3145;
-    --line-soft:#232a3c;
-    --text:#e9ebf3;
-    --text-dim:#b2bad4;
-    --text-faint:#8a93b2;
-    --yellow:#f2c811;
-    --yellow-dim:#a68d1f;
-    --teal:#2ec4b6;
-    --coral:#ff6b6b;
-    --radius:10px;
-    --display: 'Space Grotesk', 'IBM Plex Sans', sans-serif;
-    --body: 'IBM Plex Sans', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:
-      radial-gradient(ellipse at 10% -10%, rgba(46,196,182,0.08), transparent 40%),
-      radial-gradient(ellipse at 90% 0%, rgba(242,200,17,0.06), transparent 45%),
-      var(--ink);
-    color:var(--text);
-    font-family:var(--body);
-    -webkit-font-smoothing:antialiased;
-  }
-  ::selection{ background:rgba(242,200,17,0.35); }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Taller de Power BI e IA con conexión MCP desde Visual Studio Code.">
+  <title>Power BI + IA | Conexión MCP y taller</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #111417;
+      --surface: #f5f3ed;
+      --paper: #fffefa;
+      --line: #d7d3c9;
+      --muted: #656961;
+      --teal: #007c78;
+      --teal-light: #d9f0ec;
+      --gold: #e9b723;
+      --gold-light: #fff0bd;
+      --coral: #bd4b40;
+      --night: #1c2528;
+      --display: Manrope, sans-serif;
+      --mono: "DM Mono", monospace;
+      --radius: 7px;
+    }
 
-  a{color:inherit;}
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background-color: var(--surface);
+      background-image: linear-gradient(90deg, rgba(17,20,23,.025) 1px, transparent 1px), linear-gradient(rgba(17,20,23,.025) 1px, transparent 1px);
+      background-size: 24px 24px;
+      font-family: var(--display);
+      line-height: 1.55;
+    }
+    button, input { font: inherit; }
+    a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--coral); }
 
-  /* ---------- top progress rail ---------- */
-  .rail-wrap{
-    position:sticky; top:0; z-index:50;
-    background:rgba(16,19,28,0.92);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
-  }
-  .rail{
-    max-width:1080px; margin:0 auto;
-    padding:14px 24px 12px;
-    display:flex; align-items:center; gap:18px;
-  }
-  .rail-brand{
-    font-family:var(--display); font-weight:700; font-size:14px;
-    letter-spacing:0.02em; color:var(--text); white-space:nowrap;
-  }
-  .rail-brand span{ color:var(--yellow); }
-  .rail-track{
-    position:relative; flex:1; height:34px;
-    display:flex; align-items:center;
-  }
-  .rail-line{
-    position:absolute; left:14px; right:14px; top:50%;
-    height:2px; background:var(--line); transform:translateY(-50%);
-  }
-  .rail-fill{
-    position:absolute; left:14px; top:50%; height:2px;
-    background:linear-gradient(90deg, var(--teal), var(--yellow));
-    transform:translateY(-50%); transition:width .4s ease; width:0%;
-  }
-  .rail-nodes{ position:relative; display:flex; justify-content:space-between; width:100%; z-index:1; }
-  .rail-node{
-    width:26px; height:26px; border-radius:50%;
-    border:2px solid var(--line); background:var(--panel);
-    color:var(--text-dim); font-family:var(--mono); font-size:11px;
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; transition:all .2s ease; flex-shrink:0;
-    position:relative;
-  }
-  .rail-node:hover{ border-color:var(--teal); color:var(--text); transform:translateY(-2px); }
-  .rail-node.done{ background:var(--yellow); border-color:var(--yellow); color:#1a1608; font-weight:600; }
-  .rail-node .tip{
-    position:absolute; top:130%; left:50%; transform:translateX(-50%);
-    background:var(--panel-2); border:1px solid var(--line); border-radius:6px;
-    padding:4px 8px; font-family:var(--body); font-size:11px; color:var(--text-dim);
-    white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s ease;
-  }
-  .rail-node:hover .tip{ opacity:1; }
-  .rail-count{
-    font-family:var(--mono); font-size:12px; color:var(--text-dim); white-space:nowrap;
-  }
-  .rail-count b{ color:var(--yellow); font-weight:600; }
+    .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    .topbar { background: var(--night); color: #fffefa; border-bottom: 3px solid var(--gold); }
+    .topbar-inner { min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { font-weight: 800; letter-spacing: 0; font-size: 15px; text-decoration: none; color: inherit; white-space: nowrap; }
+    .brand b { color: var(--gold); }
+    .topnav { display: flex; align-items: center; gap: 20px; font-size: 13px; font-weight: 700; }
+    .topnav a { color: #dbe1dc; text-decoration: none; }
+    .topnav a:hover { color: var(--gold); }
 
-  @media (max-width:720px){
-    .rail-brand{ display:none; }
-    .rail-node .tip{ display:none; }
-  }
+    .hero { padding: 68px 0 48px; border-bottom: 1px solid var(--line); }
+    .eyebrow { display: flex; align-items: center; gap: 9px; color: var(--teal); font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+    .eyebrow::before { content: ""; width: 30px; height: 2px; background: currentColor; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 830px; margin: 14px 0 18px; font-size: clamp(36px, 5.5vw, 65px); line-height: 1.03; letter-spacing: 0; }
+    h1 em { font-style: normal; color: var(--teal); }
+    .lead { max-width: 720px; color: #454a45; font-size: 18px; line-height: 1.65; }
+    .route { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+    .route a { display: inline-flex; align-items: center; min-height: 42px; padding: 8px 15px; border: 1px solid var(--ink); border-radius: 5px; color: var(--ink); text-decoration: none; font-weight: 700; font-size: 13px; }
+    .route a.primary { border-color: var(--teal); background: var(--teal); color: white; }
+    .route a:hover { transform: translateY(-1px); }
 
-  /* ---------- hero ---------- */
-  .hero{
-    max-width:1080px; margin:0 auto; padding:64px 24px 40px;
-  }
-  .hero-eyebrow{
-    font-family:var(--mono); font-size:12px; color:var(--teal);
-    letter-spacing:0.12em; text-transform:uppercase; margin-bottom:14px;
-    display:flex; align-items:center; gap:10px;
-  }
-  .hero-eyebrow::before{
-    content:''; width:24px; height:1px; background:var(--teal);
-  }
-  h1{
-    font-family:var(--display); font-weight:700; font-size:clamp(32px,5vw,52px);
-    line-height:1.05; margin:0 0 20px; letter-spacing:-0.01em;
-  }
-  h1 em{ font-style:normal; color:var(--yellow); }
-  .hero p{
-    max-width:none; color:var(--text-dim); font-size:16px; line-height:1.65; margin:0;
-  }
+    .workspace { padding: 44px 0 70px; }
+    .view { display: none; }
+    .view.active { display: block; animation: appear .32s ease-out; scroll-margin-top: 86px; }
+    @keyframes appear { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .section-title { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: 25px; }
+    .section-title h2 { margin: 6px 0 0; font-size: clamp(25px, 3vw, 36px); letter-spacing: 0; line-height: 1.15; }
+    .section-title p { max-width: 470px; margin: 0; color: var(--muted); font-size: 14px; }
 
-  .disclaimer{
-    margin:16px 0 28px;
-    border-left:3px solid rgba(255,107,107,0.6);
-    padding:6px 0 6px 12px;
-  }
-  .disclaimer .note-title{
-    color:var(--coral);
-  }
-  .warning-icon{
-    margin-right:6px;
-  }
-  .disclaimer p{ margin:0; font-size:13.5px; line-height:1.6; color:var(--text-dim); }
-  .disclaimer p b{ color:var(--text); }
+    .notice { border-left: 4px solid var(--gold); background: var(--gold-light); padding: 14px 17px; margin: 0 0 25px; font-size: 14px; }
+    .notice strong { display: block; margin-bottom: 3px; }
+    .flow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .flow.steps { grid-template-columns: 1fr; }
+    .setup-sequence { display: block; }
+    .setup-sequence > * + * { margin-top: 16px; }
+    .setup-card { position: relative; padding: 24px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); }
+    .setup-card.wide { grid-column: span 2; }
+    .step-label { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .setup-card h3 { margin: 8px 0 11px; font-size: 20px; line-height: 1.2; }
+    .setup-card p { color: var(--muted); font-size: 14px; }
+    .setup-card ul, .setup-card ol { margin: 13px 0 0; padding-left: 20px; font-size: 14px; }
+    .setup-card li + li { margin-top: 8px; }
+    .guide-shot { display: block; width: min(100%, 640px); height: auto; margin-top: 17px; border: 1px solid var(--line); border-radius: 4px; background: #eef0ed; }
+    .guide-caption { margin: 6px 0 0; color: var(--muted); font-size: 11px; }
+    .command { margin-top: 14px; padding: 11px 13px; overflow-x: auto; background: var(--night); color: #f8f1d8; border-radius: 5px; font: 13px var(--mono); }
+    code { font: 12px var(--mono); background: #eeece5; padding: 2px 4px; border-radius: 3px; color: #1f4240; }
+    .command code { padding: 0; background: transparent; color: inherit; }
+    .checklist { margin-top: 17px; border-top: 1px solid var(--line); }
+    .check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--line); color: #424842; font-size: 14px; cursor: pointer; }
+    .check input { accent-color: var(--teal); width: 16px; height: 16px; margin-top: 3px; flex: 0 0 auto; }
+    .check.done { color: var(--muted); text-decoration: line-through; }
+    .connection { display: grid; grid-template-columns: 1.25fr .75fr; gap: 16px; margin-top: 16px; }
+    .connection.steps { grid-template-columns: 1fr; }
+    .setup-sequence.connection { display: block; }
+    .prompt { background: var(--night); color: #f9f7ee; padding: 22px; border-radius: var(--radius); }
+    .prompt .step-label { color: #8ad2ca; }
+    .prompt p { margin: 10px 0 0; font: 14px/1.65 var(--mono); }
+    .copy { display: inline-flex; margin-top: 14px; padding: 7px 10px; border: 1px solid #697372; border-radius: 4px; color: #d9e2de; background: transparent; font-size: 12px; cursor: pointer; }
+    .copy:hover { border-color: var(--gold); color: var(--gold); }
+    .ready { padding: 21px; border: 1px solid var(--teal); background: var(--teal-light); border-radius: var(--radius); }
+    .ready h3 { margin: 0 0 7px; font-size: 18px; }
+    .ready p { margin: 0; font-size: 14px; }
+    .connection-route { padding: 20px 0; border-top: 1px solid var(--line); }
+    .connection-route:first-of-type { margin-top: 18px; }
+    .connection-route h3 { margin: 0 0 8px; font-size: 18px; }
+    .connection-route p { color: var(--muted); font-size: 14px; }
 
-  /* ---------- sections ---------- */
-  .section{
-    max-width:1080px; margin:0 auto; padding:0 24px;
-  }
-  .info-grid{
-    display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:36px 0 56px;
-  }
-  @media (max-width:720px){ .info-grid{ grid-template-columns:1fr; } }
-  .info-card{
-    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
-    padding:22px 22px 20px;
-  }
-  .info-card h3{
-    font-family:var(--display); font-size:15px; margin:0 0 14px; color:var(--text);
-    display:flex; align-items:center; gap:8px;
-  }
-  .info-card h3 .dot{ width:7px; height:7px; border-radius:50%; background:var(--teal); }
-  .info-card ul{ margin:0; padding-left:18px; color:var(--text-dim); font-size:14px; line-height:1.7; }
-  .info-card li::marker{ color:var(--text-faint); }
-  .check-item{
-    display:flex; align-items:flex-start; gap:10px; padding:6px 0;
-    font-size:14px; color:var(--text-dim); cursor:pointer; line-height:1.5;
-  }
-  .check-item input{ accent-color:var(--yellow); margin-top:3px; width:15px; height:15px; cursor:pointer; flex-shrink:0; }
-  .check-item.checked span{ color:var(--text-faint); text-decoration:line-through; }
-  .check-item a{ color:var(--teal); text-decoration:underline; text-underline-offset:2px; }
-  .check-item a:hover{ color:var(--yellow); }
+    .workshop-head { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; margin-bottom: 24px; }
+    .progress { min-width: 206px; }
+    .progress-label { display: flex; justify-content: space-between; color: var(--muted); font: 12px var(--mono); }
+    .bar { height: 8px; margin-top: 7px; overflow: hidden; border: 1px solid #b9b4a8; background: var(--paper); border-radius: 999px; }
+    .bar > span { display: block; height: 100%; width: 0; background: var(--gold); transition: width .25s ease; }
+    .exercise { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 11px; overflow: hidden; scroll-margin-top: 15px; }
+    .exercise.completed { border-color: #c9a328; }
+    .exercise-toggle { width: 100%; display: grid; grid-template-columns: 42px 1fr auto; align-items: center; gap: 14px; padding: 16px 18px; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+    .exercise-toggle:hover { background: #f7f5ee; }
+    .number { display: grid; width: 33px; height: 33px; place-items: center; background: var(--night); color: white; border-radius: 4px; font: 13px var(--mono); }
+    .completed .number { background: var(--gold); color: var(--ink); }
+    .exercise-kicker { color: var(--teal); font: 11px var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+    .exercise h3 { margin: 2px 0 0; font-size: 17px; }
+    .toggle-mark { font-size: 23px; font-weight: 400; color: var(--muted); transition: transform .2s ease; }
+    .exercise.open .toggle-mark { transform: rotate(45deg); }
+    .exercise-content { display: none; border-top: 1px solid var(--line); padding: 21px 22px 22px 74px; }
+    .exercise.open .exercise-content { display: block; }
+    .goal { margin-bottom: 18px; color: #424842; font-size: 14px; }
+    .goal b { color: var(--ink); }
+    .prompt-line { display: flex; align-items: flex-start; gap: 11px; padding: 13px; margin-top: 9px; border: 1px solid var(--line); border-radius: 5px; background: #f8f7f2; }
+    .prompt-line p { flex: 1; margin: 0; font: 13px/1.55 var(--mono); }
+    .small-copy { flex: 0 0 auto; border: 0; background: none; color: var(--teal); text-decoration: underline; font-size: 12px; cursor: pointer; }
+    .small-copy:hover { color: var(--coral); }
+    .expect { margin-top: 18px; padding: 13px 15px; background: var(--teal-light); border-left: 3px solid var(--teal); font-size: 13px; }
+    .expect b { display: block; margin-bottom: 4px; }
+    .expect ul { margin: 0; padding-left: 19px; }
+    .complete { display: flex; align-items: center; gap: 9px; margin-top: 19px; padding-top: 15px; border-top: 1px solid var(--line); color: var(--teal); font-weight: 700; font-size: 13px; cursor: pointer; }
+    .complete input { accent-color: var(--teal); width: 17px; height: 17px; }
 
-  .exercises-head{
-    display:flex; align-items:baseline; justify-content:space-between; margin:0 0 8px;
-    flex-wrap:wrap; gap:8px;
-  }
-  .exercises-head h2{
-    font-family:var(--display); font-size:22px; margin:0;
-  }
-  .exercises-sub{ color:var(--text-faint); font-size:13px; font-family:var(--mono); }
-  .mcp-note{
-    font-size:13px; color:var(--text-faint); line-height:1.6; margin:0 0 20px;
-    padding-left:0; border-left:none;
-  }
-  .onboarding{
-    margin:10px 0 24px;
-    padding:2px 0 0;
-  }
-  .onboarding-title{
-    font-family:var(--display);
-    font-size:22px;
-    margin:0 0 10px;
-    color:var(--text);
-  }
-  .onboarding-sub{
-    margin:0 0 16px;
-    color:var(--text-dim);
-    font-size:14px;
-    line-height:1.6;
-    max-width:none;
-  }
-  .note-title{
-    display:block;
-    font-family:var(--mono);
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:0.08em;
-    margin-bottom:6px;
-  }
-  .path-note{
-    margin:0 0 20px;
-    border-left:3px solid rgba(242,200,17,0.65);
-    padding:6px 0 6px 12px;
-    color:var(--text);
-    font-size:14px;
-    line-height:1.55;
-  }
-  .path-note b{ color:var(--yellow); }
-  .path-note .note-title{ color:var(--yellow); }
-  .mcp-explain{
-    margin:0 0 22px;
-    border-left:3px solid rgba(46,196,182,0.55);
-    padding:6px 0 6px 12px;
-    color:var(--text-dim);
-    font-size:14px;
-    line-height:1.6;
-  }
-  .mcp-explain b{ color:var(--text); }
-  .mcp-explain .note-title{ color:var(--teal); }
-  .via-grid{ margin-top:0; margin-bottom:36px; }
-  .via-card{
-    position:relative;
-    padding-top:18px;
-  }
-  .via-toggle{
-    margin:6px 0 0;
-    background:var(--panel-2);
-    color:var(--text-dim);
-    border:1px solid var(--line);
-    border-radius:6px;
-    font-family:var(--body);
-    font-size:12px;
-    padding:6px 10px;
-    cursor:pointer;
-  }
-  .via-toggle:hover{ border-color:var(--teal); color:var(--teal); }
-  .via-card.via-b .via-toggle:hover{ border-color:var(--yellow); color:var(--yellow); }
-  .via-details{
-    max-height:0;
-    overflow:hidden;
-    transition:max-height .28s ease;
-  }
-  .via-card.open .via-details{ max-height:900px; }
-  .via-card.open.via-a{ border-color:var(--teal); box-shadow:0 0 0 1px rgba(46,196,182,0.25); }
-  .via-card.open.via-b{ border-color:var(--yellow-dim); box-shadow:0 0 0 1px rgba(242,200,17,0.22); }
-  .via-kicker{
-    margin:0 0 10px;
-    color:var(--text-faint);
-    font-size:12px;
-    font-family:var(--mono);
-  }
+    footer { padding: 22px 0 45px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    footer .shell { display: flex; gap: 15px; justify-content: space-between; align-items: center; }
+    .reset { border: 1px solid var(--line); background: var(--paper); color: var(--muted); border-radius: 4px; padding: 6px 9px; cursor: pointer; font-size: 12px; }
+    .reset:hover { border-color: var(--coral); color: var(--coral); }
 
-  /* ---------- exercise card ---------- */
-  .exercise{
-    border:1px solid var(--line); border-radius:var(--radius); background:var(--panel);
-    margin-bottom:18px; overflow:hidden; scroll-margin-top:90px;
-    transition:border-color .2s ease;
-  }
-  .exercise.is-done{ border-color:var(--yellow-dim); }
-  .exercise-head{
-    display:flex; align-items:center; gap:16px; padding:18px 22px;
-    cursor:pointer; user-select:none;
-  }
-  .ex-num{
-    font-family:var(--mono); font-size:13px; color:var(--ink); font-weight:600;
-    width:34px; height:34px; border-radius:8px; background:var(--line-soft);
-    color:var(--text-dim); display:flex; align-items:center; justify-content:center;
-    flex-shrink:0; transition:all .2s ease;
-  }
-  .exercise.is-done .ex-num{ background:var(--yellow); color:#1a1608; }
-  .ex-titles{ flex:1; min-width:0; }
-  .ex-titles .kicker{
-    font-family:var(--mono); font-size:11px; color:var(--teal); text-transform:uppercase;
-    letter-spacing:0.08em; margin-bottom:3px;
-  }
-  .ex-titles h3{ font-family:var(--display); font-size:17px; margin:0; color:var(--text); }
-  .ex-toggle{
-    width:28px; height:28px; border-radius:50%; border:1px solid var(--line);
-    display:flex; align-items:center; justify-content:center; flex-shrink:0;
-    color:var(--text-dim); transition:transform .25s ease;
-  }
-  .exercise.open .ex-toggle{ transform:rotate(45deg); }
-  .exercise-body{
-    max-height:0; overflow:hidden; transition:max-height .3s ease;
-  }
-  .exercise.open .exercise-body{ max-height:2000px; }
-  .exercise-inner{ padding:0 22px 24px; border-top:1px solid var(--line-soft); }
-  .ex-objetivo{
-    color:var(--text-dim); font-size:14px; line-height:1.65; margin:18px 0 20px;
-  }
-  .ex-objetivo b{ color:var(--text); font-weight:600; }
-  .ex-accept{
-    margin:0 0 20px; padding:12px 14px;
-    border:1px solid var(--line); border-radius:8px; background:var(--ink);
-  }
-  .ex-accept .head{
-    font-family:var(--body); font-size:13px; color:var(--text);
-    font-weight:600; margin-bottom:8px;
-  }
-  .ex-accept ul{
-    margin:0; padding-left:18px; color:var(--text-dim); font-size:13px; line-height:1.6;
-  }
-
-  .ex-tasks{ margin-bottom:20px; }
-  .ex-tasks .taskhead{
-    font-family:var(--mono); font-size:11px; color:var(--text-faint);
-    text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;
-  }
-
-  .prompt-block{
-    background:var(--ink); border:1px solid var(--line); border-radius:8px;
-    padding:14px 14px 14px 16px; margin-bottom:10px;
-    display:flex; align-items:flex-start; gap:12px;
-    position:relative;
-  }
-  .prompt-block .qmark{
-    font-family:var(--display); color:var(--yellow-dim); font-size:20px; line-height:1;
-    flex-shrink:0; margin-top:1px;
-  }
-  .prompt-block p{
-    margin:0; font-family:var(--mono); font-size:13px; line-height:1.6; color:var(--text);
-    flex:1;
-  }
-  .copy-btn{
-    flex-shrink:0; background:var(--panel-2); border:1px solid var(--line);
-    color:var(--text-dim); font-family:var(--body); font-size:12px; font-weight:500;
-    padding:6px 10px; border-radius:6px; cursor:pointer; transition:all .15s ease;
-    white-space:nowrap;
-  }
-  .copy-btn:hover{ border-color:var(--teal); color:var(--teal); }
-  .copy-btn.copied{ border-color:var(--yellow); color:var(--yellow); }
-
-  .ex-footer{
-    display:flex; align-items:center; justify-content:space-between; margin-top:8px;
-    padding-top:16px; border-top:1px solid var(--line-soft);
-  }
-  .mark-done{
-    display:flex; align-items:center; gap:9px; cursor:pointer;
-    font-size:13px; color:var(--text-dim); font-weight:500;
-  }
-  .mark-done input{ accent-color:var(--yellow); width:16px; height:16px; cursor:pointer; }
-  .mark-done.is-checked{ color:var(--yellow); }
-
-  footer{
-    max-width:1080px; margin:0 auto; padding:20px 24px 60px;
-    color:var(--text-faint); font-size:12px; font-family:var(--mono);
-    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
-  }
-  .reset-btn{
-    background:none; border:1px solid var(--line); color:var(--text-faint);
-    font-family:var(--mono); font-size:12px; padding:5px 10px; border-radius:6px;
-    cursor:pointer;
-  }
-  .reset-btn:hover{ border-color:var(--coral); color:var(--coral); }
-</style>
+    @media (max-width: 700px) {
+      .shell { width: min(100% - 28px, 1120px); }
+      .topbar-inner { min-height: 54px; }
+      .topnav { gap: 12px; font-size: 12px; }
+      .hero { padding: 48px 0 35px; }
+      .lead { font-size: 16px; }
+      .flow, .connection { grid-template-columns: 1fr; }
+      .setup-card.wide { grid-column: span 1; }
+      .section-title, .workshop-head { display: block; }
+      .section-title p { margin-top: 12px; }
+      .progress { margin-top: 20px; }
+      .exercise-toggle { grid-template-columns: 35px 1fr auto; gap: 10px; padding: 14px; }
+      .exercise-content { padding: 18px 14px; }
+      .prompt-line { display: block; }
+      .small-copy { margin-top: 9px; padding: 0; }
+      .topnav a:last-child { display: none; }
+    }
+  </style>
 </head>
 <body>
-
-<div class="rail-wrap">
-  <div class="rail">
-    <div class="rail-brand">TALLER <span>PBI · IA</span></div>
-    <div class="rail-track">
-      <div class="rail-line"></div>
-      <div class="rail-fill" id="railFill"></div>
-      <div class="rail-nodes" id="railNodes"></div>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="#inicio">POWER BI <b>+</b> IA</a>
+      <nav class="topnav" aria-label="Navegación principal">
+        <a href="#conexion" data-view="setup">1. Instalar y conectar</a>
+        <a href="#taller" data-view="workshop">2. Taller práctico</a>
+        <a href="guia-conexion-mcp-power-bi-vscode.md">Guía completa</a>
+      </nav>
     </div>
-    <div class="rail-count"><b id="doneCount">0</b>/<span id="totalCount">10</span> ejercicios</div>
-  </div>
-</div>
+  </header>
 
-<div class="hero">
-  <div class="hero-eyebrow">Guion del taller</div>
-  <h1>De heredar un dashboard<br>a <em>dominarlo con IA</em>.</h1>
-  <p>Contoso vende productos y servicios tecnológicos por distintos canales y zonas comerciales. Te incorporas a un proyecto Power BI existente y, a lo largo de este taller, aprenderás a usar IA con Power BI a través de MCP para entender el modelo, corregirlo, documentarlo y llevarlo a producción con criterio.</p>
-</div>
-
-<div class="section">
-  <div class="onboarding">
-    <h2 class="onboarding-title">Antes de empezar</h2>
-    <p class="onboarding-sub">Vas a trabajar sobre un modelo real de Contoso. En este bloque defines cómo te conectarás con MCP y dejas lista tu vía de trabajo para que el resto de ejercicios sea fluido.</p>
-
-    <p class="mcp-explain">
-      <span class="note-title">Qué es MCP</span>
-      MCP (Model Context Protocol) es el puente entre la IA y tu modelo semántico de Power BI. Le permite inspeccionar tablas, medidas y relaciones, proponer cambios y ayudarte a documentar más rápido.<br><b>Importante:</b> las decisiones finales y la validación siguen siendo tuyas.
-    </p>
-
-    <p class="path-note">
-      <span class="note-title">Elige una sola vía</span>
-      Elige <b>solo una vía</b> y completa su preparación antes de continuar: <b>Vía A</b> (VS Code) o <b>Vía B</b> (Copilot CLI + Skills Fabric). No mezcles rutas.
-    </p>
-  </div>
-
-  <div class="info-grid via-grid">
-    <div class="info-card via-card via-a" data-path="a">
-      <h3><span class="dot" style="background:var(--teal)"></span>Vía A · Power BI + VS Code</h3>
-      <ul>
-        <li>Flujo guiado desde VS Code.</li>
-        <li>Ideal si ya trabajas en Power BI Desktop y quieres apoyo interactivo en el editor.</li>
-      </ul>
-      <button class="via-toggle" data-via-toggle="a">Ver preparación</button>
-      <div class="via-details">
-        <p class="via-kicker">Preparación completa de la Vía A</p>
-        <label class="check-item" data-check="prep-a-0">
-          <input type="checkbox"><span>Descargar y abrir el informe de Power BI — <a href="https://hiberus.sharepoint.com/:f:/r/sites/PowerBITeam/Documentos%20compartidos/General/3%20-%20Documentaci%C3%B3n%20y%20Formaci%C3%B3n/7%20-%20Inteligencia%20Artificial%20para%20Visualizaci%C3%B3n%20de%20datos?csf=1&web=1&e=KV8iT5" target="_blank" rel="noopener">carpeta del informe</a></span>
-        </label>
-        <label class="check-item" data-check="prep-a-1">
-          <input type="checkbox"><span>Tener Power BI Desktop abierto con el informe cargado.</span>
-        </label>
-        <label class="check-item" data-check="prep-a-2">
-          <input type="checkbox"><span>Tener VS Code abierto en la carpeta del taller.</span>
-        </label>
-        <label class="check-item" data-check="prep-a-3">
-          <input type="checkbox"><span>Instalar el MCP desde Marketplace de VS Code (Power BI Modeling MCP) — <a href="https://marketplace.visualstudio.com/search?term=powerbi%20modeling%20mcp&target=VSCode&category=All%20categories&sortBy=Relevance" target="_blank" rel="noopener">buscar en Marketplace</a></span>
-        </label>
-        <label class="check-item" data-check="prep-a-4">
-          <input type="checkbox"><span>Iniciar el flujo desde terminal de VS Code para resolver ejercicios 1–10.</span>
-        </label>
-      </div>
-    </div>
-    <div class="info-card via-card via-b" data-path="b">
-      <h3><span class="dot" style="background:var(--yellow)"></span>Vía B · Copilot CLI + Skills Fabric</h3>
-      <ul>
-        <li>Flujo completo desde terminal con MCP y skills.</li>
-        <li>Ideal si quieres trabajar fuera de VS Code o automatizar más el modelado.</li>
-      </ul>
-      <button class="via-toggle" data-via-toggle="b">Ver preparación</button>
-      <div class="via-details">
-        <p class="via-kicker">Preparación completa de la Vía B</p>
-        <label class="check-item" data-check="prep-b-0">
-          <input type="checkbox"><span>Tener <b>Node.js (incluye npm)</b> instalado — <a href="https://nodejs.org/es/download" target="_blank" rel="noopener">descarga oficial</a></span>
-        </label>
-        <label class="check-item" data-check="prep-b-1">
-          <input type="checkbox"><span>GitHub Copilot CLI instalado — <a href="https://docs.github.com/es/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli" target="_blank" rel="noopener">guía de instalación</a></span>
-        </label>
-        <label class="check-item" data-check="prep-b-2">
-          <input type="checkbox"><span>MCP de modelado instalado: <code>npm i @microsoft/powerbi-modeling-mcp</code> — <a href="https://github.com/microsoft/powerbi-modeling-mcp" target="_blank" rel="noopener">microsoft/powerbi-modeling-mcp</a></span>
-        </label>
-        <label class="check-item" data-check="prep-b-3">
-          <input type="checkbox"><span>Skills de Fabric instaladas — <a href="https://github.com/microsoft/skills-for-fabric" target="_blank" rel="noopener">microsoft/skills-for-fabric</a></span>
-        </label>
-        <label class="check-item" data-check="prep-b-4">
-          <input type="checkbox"><span>Tener Power BI Desktop abierto con el informe cargado para conectar el modelo.</span>
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <div class="disclaimer">
-    <p><span class="note-title"><span class="warning-icon">&#9888;</span>Pensamiento crítico, siempre</span>La IA acelera el trabajo, pero no sustituye tu criterio como analista. Revisa cada medida, cada relación y cada visual antes de darlos por buenos — sobre todo cuando la respuesta suene convincente. Un resultado bien redactado no es lo mismo que un resultado correcto.</p>
-  </div>
-
-  <div class="exercises-head">
-    <h2>Ejercicios</h2>
-    <div class="exercises-sub">marca cada uno al completarlo · copia los prompts sugeridos</div>
-  </div>
-  <p class="mcp-note">El MCP de modelado permite que la IA lea y proponga cambios sobre tu modelo Power BI. Nada se aplica sin tu confirmación: tú sigues decidiendo qué se guarda en el informe.</p>
-
-  <div id="exerciseList"></div>
-</div>
-
-<footer>
-  <span>Progreso guardado solo en esta sesión del navegador.</span>
-  <button class="reset-btn" id="resetBtn">Reiniciar progreso</button>
-</footer>
-
-<script>
-const EXERCISES = [
-  {
-    n: 1,
-    kicker: "Puesta en marcha",
-    title: "Conectarse al informe",
-    objetivo: "Conectarse al informe de Power BI en línea indicando, en la terminal, que se conecte al informe abierto usando la herramienta MCP de Power BI. Es importante especificar el nombre del informe.",
-    acceptance: [
-      "Te confirma claramente que está conectada al informe correcto (con el nombre que le diste).",
-      "Puede leer información básica del modelo (tablas y/o medidas) sin errores de conexión."
-    ],
-    prompts: [
-      "Conéctate al informe de Power BI que tengo abierto ahora mismo, llamado «[nombre del informe]», usando la herramienta MCP de Power BI."
-    ]
-  },
-  {
-    n: 2,
-    kicker: "Descubrimiento",
-    title: "Descubrir el modelo mediante IA",
-    objetivo: "Comprender el modelo semántico sin revisar manualmente todas las tablas.",
-    acceptance: [
-      "Te explica de forma clara qué tablas son de hechos y cuáles de dimensiones.",
-      "El resumen funcional conecta el modelo con el negocio (qué responde y para quién sirve)."
-    ],
-    prompts: [
-      "Describe este modelo semántico.",
-      "¿Cuál es la tabla de hechos? ¿Cuáles son las dimensiones?",
-      "Genera un resumen funcional."
-    ]
-  },
-  {
-    n: 3,
-    kicker: "Calidad y KPIs",
-    title: "Comprobar, corregir y crear KPIs",
-    objetivo: "Revisar las medidas existentes detectando errores, crear Margen y Ticket Medio explicando el DAX generado, y proponer formas de visualizar la información.",
-    acceptance: [
-      "Detecta y explica posibles problemas en medidas existentes (no solo los lista).",
-      "Crea Margen y Ticket Medio con DAX entendible y te indica cómo validarlos en visuales."
-    ],
-    prompts: [
-      "Comprueba las medidas existentes e indica si detectas algún error o inconsistencia.",
-      "Crea las medidas Margen y Ticket Medio, y revisa que se aplican correctamente las modificaciones."
-    ]
-  },
-  {
-    n: 4,
-    kicker: "Visualización",
-    title: "Página ejecutiva",
-    objetivo: "Diseñar una página ejecutiva para dirección comercial, indicando qué KPIs mostrar, qué filtros incluir y cómo distribuir visualmente el contenido. Primero se planifica la página y, solo si la propuesta convence, se pide su creación.",
-    acceptance: [
-      "La propuesta incluye KPIs, filtros y distribución de la página, explicando por qué cada decisión tiene sentido de negocio.",
-      "Al crear la página, respeta lo planificado y te deja analizar por periodo, canal y zona comercial sin fricción."
-    ],
-    phases: [
-      {
-        label: "1 · Planificar la página",
-        prompts: [
-          "Antes de crear nada, planifica una página ejecutiva para dirección comercial: propón los KPIs principales, los filtros necesarios y una distribución visual del contenido. Explícame el motivo de cada decisión."
-        ]
-      },
-      {
-        label: "2 · Crear la página",
-        prompts: [
-          "La planificación me convence, crea la página siguiendo exactamente esa propuesta."
-        ]
-      }
-    ]
-  },
-  {
-    n: 5,
-    kicker: "Inteligencia temporal",
-    title: "Acumulados y comparativas interanuales",
-    objetivo: "Crear Ventas YTD (ventas acumuladas a lo largo del año) y una comparativa contra el año anterior: Ventas LY, Variación € y Variación %.",
-    acceptance: [
-      "Obtienes las medidas YTD, LY, Variación € y Variación % sin errores de contexto temporal.",
-      "Las comparativas tienen sentido al filtrar por año/mes y no devuelven resultados incoherentes."
-    ],
-    prompts: [
-      "Quiero realizar análisis con inteligencia temporal, ayúdame a crear varias medidas que me permitan conocer más detalle sobre las ventas: variaciones año a año, acumulados anuales y mensuales, variación en importe y en %."
-    ]
-  },
-  {
-    n: 6,
-    kicker: "Rankings",
-    title: "Top N y clasificaciones",
-    objetivo: "Crear Top N de productos, un ranking de clientes y una clasificación de comerciales, y obtener recomendaciones de qué visuales usar para mostrarlo.",
-    acceptance: [
-      "El Top N y los rankings responden bien a filtros y segmentadores habituales del informe.",
-      "Recibes recomendaciones de visuales aplicables y concretas para implementar en la página."
-    ],
-    prompts: [
-      "Crea una medida para Top N productos vendidos y un ranking de clientes. Recomiéndame también qué visuales usar para mostrarlos, y dame el detalle de cómo utilizar esas medidas en mi informe."
-    ]
-  },
-  {
-    n: 7,
-    kicker: "Auditoría",
-    title: "Actuar como arquitecto Power BI",
-    objetivo: "Pedir al MCP que actúe como arquitecto Power BI e identifique problemas, riesgos y mejoras potenciales del modelo.",
-    acceptance: [
-      "Devuelve una tabla priorizada con problemas, impacto y riesgo de cada mejora propuesta.",
-      "Las recomendaciones son accionables y separan quick wins de cambios estructurales."
-    ],
-    prompts: [
-      "Actúa como arquitecto Power BI, e identifica problemas, riesgos y mejoras potenciales. Recopila toda la información en una tabla en la que se indique el impacto y el riesgo de cada uno de los cambios que propones."
-    ]
-  },
-  {
-    n: 8,
-    kicker: "Modelado avanzado",
-    title: "Dos fechas, una tabla de hechos",
-    objetivo: "Analizar FechaPedido y FechaEntrega dentro de la tabla de hechos. Debatir relaciones activas, inactivas y el uso de USERELATIONSHIP.",
-    acceptance: [
-      "Queda claro cuándo usar FechaPedido vs FechaEntrega y cómo cambia el resultado del análisis.",
-      "La explicación de relaciones activas/inactivas y USERELATIONSHIP es comprensible para perfil junior."
-    ],
-    prompts: [
-      "En la tabla de hechos hay dos fechas, fecha de pedido y fecha de entrega. Haz los ajustes necesarios para poder analizar la información por ambas fechas, y dime cómo debería realizar los análisis como si fuese un desarrollador de Power BI junior que acaba de empezar."
-    ]
-  },
-  {
-    n: 9,
-    kicker: "Refactorización",
-    title: "Convención de nombres y orden",
-    objetivo: "Proponer una convención de nombres y una organización de las medidas en carpetas, y aplicarla al modelo una vez validada.",
-    acceptance: [
-      "La convención de nombres es consistente, legible y fácil de mantener por el equipo.",
-      "Las medidas quedan ordenadas en carpetas funcionales y se nota mejora clara de navegabilidad."
-    ],
-    prompts: [
-      "Propón una convención de nombres y una organización de las medidas en carpetas, propónla primero y si es correcta la aplicaremos."
-    ]
-  },
-  {
-    n: 10,
-    kicker: "Documentación",
-    title: "Documentación funcional del modelo",
-    objetivo: "Generar documentación funcional completa de tablas, relaciones, medidas, reglas de negocio y casos de uso — y comparar el tiempo invertido frente a una documentación manual.",
-    acceptance: [
-      "Se genera un .md utilizable con trazabilidad de origen de datos y uso en el informe.",
-      "Incluye descripción funcional, casos de uso y próximos pasos sin quedarse en texto genérico."
-    ],
-    prompts: [
-      "Genera documentación funcional completa en un fichero .md de tablas, relaciones, medidas, reglas de negocio y casos de uso. Necesito que se tenga trazabilidad de dónde vienen los datos (origen) y cómo se usan en el informe. Además de una descripción funcional de las tablas, las columnas, medidas y cálculos y una descripción general de lo que se muestra en las diferentes páginas del informe. Así como una propuesta de evolución del cuadro de mandos con próximos pasos."
-    ]
-  }
-];
-
-const state = {}; // in-memory only, resets on reload
-EXERCISES.forEach(e => state[e.n] = false);
-
-const listEl = document.getElementById('exerciseList');
-const railNodes = document.getElementById('railNodes');
-const railFill = document.getElementById('railFill');
-const doneCountEl = document.getElementById('doneCount');
-const totalCountEl = document.getElementById('totalCount');
-totalCountEl.textContent = EXERCISES.length;
-
-document.querySelectorAll('.via-toggle').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const card = btn.closest('.via-card');
-    const isOpen = card.classList.toggle('open');
-    btn.textContent = isOpen ? 'Ocultar preparación' : 'Ver preparación';
-  });
-});
-
-function updateProgress(){
-  const done = EXERCISES.filter(e => state[e.n]).length;
-  doneCountEl.textContent = done;
-  const pct = (done / EXERCISES.length) * 100;
-  railFill.style.width = pct + '%';
-
-  EXERCISES.forEach((e, i) => {
-    const rn = document.getElementById('railnode-' + e.n);
-    const card = document.getElementById('exercise-' + e.n);
-    const check = document.getElementById('done-check-' + e.n);
-    if(state[e.n]){
-      rn.classList.add('done');
-      card.classList.add('is-done');
-      check.parentElement.classList.add('is-checked');
-    } else {
-      rn.classList.remove('done');
-      card.classList.remove('is-done');
-      check.parentElement.classList.remove('is-checked');
-    }
-  });
-}
-
-// build rail nodes
-EXERCISES.forEach((e, i) => {
-  const rn = document.createElement('div');
-  rn.className = 'rail-node';
-  rn.id = 'railnode-' + e.n;
-  rn.innerHTML = e.n + '<span class="tip">' + e.title + '</span>';
-  rn.addEventListener('click', () => {
-    document.getElementById('exercise-' + e.n).scrollIntoView({behavior:'smooth', block:'start'});
-    openExercise(e.n);
-  });
-  railNodes.appendChild(rn);
-});
-
-function openExercise(n){
-  const card = document.getElementById('exercise-' + n);
-  if(!card.classList.contains('open')) card.classList.add('open');
-}
-
-// build exercise cards
-const promptMap = {};
-let promptCounter = 0;
-
-function renderPrompt(text){
-  const id = 'p' + (promptCounter++);
-  promptMap[id] = text;
-  return `
-    <div class="prompt-block">
-      <span class="qmark">&rdquo;</span>
-      <p>${text}</p>
-      <button class="copy-btn" data-copy="${id}">Copiar</button>
-    </div>
-  `;
-}
-
-EXERCISES.forEach(e => {
-  const card = document.createElement('div');
-  card.className = 'exercise';
-  card.id = 'exercise-' + e.n;
-
-  let tasksHtml = '';
-  if(e.phases){
-    tasksHtml = e.phases.map(phase => `
-      <div class="ex-tasks">
-        <div class="taskhead">${phase.label}</div>
-        ${phase.prompts.map(renderPrompt).join('')}
-      </div>
-    `).join('');
-  } else {
-    tasksHtml = `
-      <div class="ex-tasks">
-        <div class="taskhead">Prompts sugeridos</div>
-        ${e.prompts.map(renderPrompt).join('')}
-      </div>
-    `;
-  }
-
-  const acceptanceHtml = e.acceptance?.length ? `
-    <div class="ex-accept">
-      <div class="head">¿Qué respuesta deberías esperar?</div>
-      <ul>
-        ${e.acceptance.map(item => `<li>${item}</li>`).join('')}
-      </ul>
-    </div>
-  ` : '';
-
-  card.innerHTML = `
-    <div class="exercise-head" data-toggle="${e.n}">
-      <div class="ex-num">${e.n}</div>
-      <div class="ex-titles">
-        <div class="kicker">${e.kicker}</div>
-        <h3>${e.title}</h3>
-      </div>
-      <div class="ex-toggle">+</div>
-    </div>
-    <div class="exercise-body">
-      <div class="exercise-inner">
-        <p class="ex-objetivo"><b>Objetivo.</b> ${e.objetivo}</p>
-        ${tasksHtml}
-        ${acceptanceHtml}
-        <div class="ex-footer">
-          <label class="mark-done">
-            <input type="checkbox" id="done-check-${e.n}">
-            <span>Marcar ejercicio ${e.n} como completado</span>
-          </label>
+  <main id="inicio">
+    <section class="hero">
+      <div class="shell">
+        <div class="eyebrow">Power BI Modeling MCP Server · VS Code</div>
+        <h1>Conecta tu modelo.<br><em>Después, ponlo a prueba.</em></h1>
+        <p class="lead">Una única página para preparar MCP en Visual Studio Code y practicar con un modelo Power BI real. Primero dejas la conexión lista; después trabajas los diez ejercicios a tu ritmo.</p>
+        <div class="route">
+          <a class="primary" href="#conexion" data-view="setup">Preparar conexión</a>
+          <a href="#taller" data-view="workshop">Ir al taller</a>
         </div>
       </div>
+    </section>
+
+    <section class="workspace shell">
+      <div class="view active" id="setup" aria-labelledby="setup-title">
+        <div class="section-title">
+          <div>
+            <div class="eyebrow">Bloque 1 · Preparación</div>
+            <h2 id="setup-title">Instala, abre y verifica la conexión</h2>
+          </div>
+          <p>Sigue los pasos en orden. Al terminar podrás conectar a un informe abierto en Power BI Desktop o directamente a los archivos de un proyecto PBIP.</p>
+        </div>
+
+        <aside class="notice">
+          <strong>Antes de empezar: trabaja sobre una copia o una rama.</strong>
+          MCP puede consultar y modificar el modelo. Comprueba cada propuesta antes de aceptarla y guarda el informe desde Power BI Desktop antes de cerrarlo.
+        </aside>
+
+        <div class="setup-sequence">
+          <article class="setup-card">
+            <div class="step-label">Paso 1 · Requisitos base</div>
+            <h3>Comprueba Git y Copilot Chat</h3>
+            <p>Instala <a href="https://git-scm.com/downloads" target="_blank" rel="noopener"><b>Git</b> desde su página oficial</a>, o usa el método de instalación permitido en tu equipo. Es necesario para instalar el plugin de autoría y te permitirá revisar los cambios del proyecto. Reinicia VS Code después de instalarlo.</p>
+            <div class="command"><code>git --version</code></div>
+            <p>En VS Code abre <b>Extensiones</b> con <code>Ctrl+Shift+X</code>, busca <b>GitHub Copilot Chat</b>, instálalo si no aparece como instalado e inicia sesión con tu cuenta con licencia.</p>
+            <div class="checklist">
+              <label class="check"><input type="checkbox" data-prep="git"><span><code>git --version</code> muestra una versión en la terminal integrada.</span></label>
+              <label class="check"><input type="checkbox" data-prep="copilot"><span>El panel de GitHub Copilot Chat se abre y reconoce tu sesión.</span></label>
+            </div>
+          </article>
+
+          <article class="setup-card">
+            <div class="step-label">Paso 2 · Servidor y skills</div>
+            <h3>Instala MCP y Power BI Report Authoring</h3>
+            <ol>
+              <li>En <b>Extensiones</b>, busca <b>Power BI Modeling MCP Server</b> e instálalo. Este es el servidor que da a Copilot acceso al modelo.
+                <img class="guide-shot" src="https://miro.medium.com/v2/resize:fit:1400/1*l1gUzGV6ygIUr9wO5yZ2XQ.png" alt="Marketplace de Visual Studio Code con Power BI Modeling MCP Server">
+                <p class="guide-caption">Referencia visual: busca <b>Power BI Modeling MCP Server</b> en el Marketplace de VS Code e instálalo.</p>
+              </li>
+              <li>En la misma vista de Extensiones selecciona <b>...</b>, abre <b>Views &gt; Agent Plugins</b>, usa la búsqueda e instala <code>powerbi-authoring</code>.
+                <img class="guide-shot" src="https://code.visualstudio.com/assets/docs/agent-customization/agent-plugins/extensions-view.png" alt="Vista de Extensiones de Visual Studio Code con el menú Agent Plugins">
+                <p class="guide-caption">Referencia visual: abre el menú <b>...</b> de Extensiones y selecciona <b>Views &gt; Agent Plugins</b>.</p>
+              </li>
+              <li>Si VS Code solicita recargar la ventana, acepta la recarga antes de continuar.</li>
+            </ol>
+            <div class="checklist">
+              <label class="check"><input type="checkbox" data-prep="mcp"><span>La extensión <b>Power BI Modeling MCP Server</b> figura como instalada y habilitada.</span></label>
+              <label class="check"><input type="checkbox" data-prep="authoring"><span>El Agent Plugin <b>Power BI Report Authoring</b> figura como instalado.</span></label>
+            </div>
+          </article>
+
+          <article class="setup-card wide">
+            <div class="step-label">Paso 3 · Prepara el informe</div>
+            <h3>Activa PBIP y guarda el proyecto</h3>
+            <ol>
+              <li>En Power BI Desktop abre <b>Archivo &gt; Opciones y configuración &gt; Opciones &gt; Funciones de vista previa</b>.</li>
+              <li>Activa <b>Opción de guardar proyecto de Power BI (.pbip)</b>. Activa también el formato PBIR mejorado si tu versión lo muestra.</li>
+              <li>Selecciona <b>Archivo &gt; Guardar como</b> y guarda el informe como <b>Proyecto de Power BI (.pbip)</b>.
+                <img class="guide-shot" src="https://learn.microsoft.com/es-es/power-bi/developer/projects/media/projects-overview/pbip-saveastype.png" alt="Ventana de Power BI Desktop para guardar como proyecto de Power BI">
+                <p class="guide-caption">Referencia visual: selecciona <b>Proyecto de Power BI (.pbip)</b> al guardar el informe.</p>
+              </li>
+              <li>En VS Code usa <b>Archivo &gt; Abrir carpeta</b> y selecciona la carpeta raíz que contiene el archivo <code>.pbip</code>, no la carpeta del informe ni la del modelo de forma aislada.</li>
+            </ol>
+            <p>Tras guardar deberías ver el archivo <code>NombreInforme.pbip</code> y las carpetas <code>NombreInforme.Report</code> y <code>NombreInforme.SemanticModel</code>. Dentro de esta última, <code>definition</code> contiene el modelo TMDL editable.</p>
+            <div class="checklist">
+              <label class="check"><input type="checkbox" data-prep="pbip"><span>Veo el archivo <code>.pbip</code> y las dos carpetas <code>.Report</code> y <code>.SemanticModel</code> en el explorador de VS Code.</span></label>
+              <label class="check"><input type="checkbox" data-prep="desktop"><span>Power BI Desktop sigue abierto con el informe correcto cargado.</span></label>
+            </div>
+          </article>
+        </div>
+
+        <div class="setup-sequence" id="conexion">
+          <article class="setup-card wide">
+            <div class="step-label">Paso 4 · Elige una única vía de conexión</div>
+            <h3>Conecta el modelo antes de continuar</h3>
+            <p>Usa una sola opción. Para el taller, la opción A es la más directa porque permite comprobar cada cambio en Power BI Desktop. La opción B sirve para trabajar directamente sobre los archivos TMDL del proyecto.</p>
+
+            <section class="connection-route">
+              <div class="step-label">Opción A · Informe abierto en Desktop</div>
+              <h3>Conectar al informe que estás viendo</h3>
+              <p>Mantén Power BI Desktop abierto con el informe correcto. En Copilot Chat selecciona el modo <b>Agent</b> si está disponible, pega el prompt y aprueba el acceso de solo lectura cuando VS Code lo solicite.</p>
+              <div class="prompt">
+                <p id="connect-prompt">Conéctate al modelo del informe que tengo abierto en Power BI Desktop, llamado «[nombre exacto del informe]». Lista las tablas, medidas y relaciones disponibles, sin modificar nada.</p>
+                <button class="copy" data-copy="connect-prompt">Copiar prompt</button>
+              </div>
+            </section>
+
+            <section class="connection-route">
+              <div class="step-label">Opción B · Carpeta PBIP</div>
+              <h3>Conectar a la definición del proyecto</h3>
+              <p>Usa esta vía si trabajarás sobre archivos y no necesitas abrir Power BI Desktop. Sustituye la ruta de ejemplo por la carpeta <code>definition</code> de tu modelo semántico.</p>
+              <div class="command"><code>Abre el modelo semántico de esta carpeta PBIP: C:\Ruta\NombreInforme.SemanticModel\definition. Lista las tablas, medidas y relaciones disponibles, sin modificar nada.</code></div>
+            </section>
+
+            <div class="checklist">
+              <label class="check"><input type="checkbox" data-prep="connection"><span>He elegido una vía y la respuesta identifica las tablas, medidas o relaciones reales de mi modelo.</span></label>
+            </div>
+          </article>
+
+          <article class="setup-card">
+            <div class="step-label">Paso 5 · Validación</div>
+            <h3>Antes de modificar</h3>
+            <p>Empieza siempre con una petición de lectura. Comprueba que el nombre del informe, el número de tablas y alguna medida conocida coinciden con lo que ves en Power BI Desktop.</p>
+            <div class="command"><code>Resume el modelo, sin realizar cambios. Indica tablas, medidas, relaciones y el origen de datos de cada tabla.</code></div>
+          </article>
+          <article class="setup-card">
+            <div class="step-label">Si algo falla</div>
+            <h3>Comprobaciones rápidas</h3>
+            <ul>
+              <li>Si no detecta el informe, confirma que Power BI Desktop sigue abierto y vuelve a enviar el prompt con el nombre exacto.</li>
+              <li>Si no aparece la herramienta MCP, recarga VS Code y confirma que la extensión está habilitada.</li>
+              <li>Si trabajas con PBIP, asegúrate de indicar la carpeta <code>.SemanticModel\definition</code>, no el archivo <code>.pbip</code>.</li>
+              <li>Si la respuesta no coincide con tu modelo, detente y no apliques modificaciones.</li>
+            </ul>
+          </article>
+        </div>
+
+        <aside class="ready" style="margin-top:16px">
+          <h3>Conexión lista</h3>
+          <p>Cuando la consulta de lectura devuelva información correcta del modelo, pasa al taller. En los ejercicios que creen o modifiquen objetos, revisa el resultado en Power BI Desktop y guarda el proyecto para conservarlo.</p>
+          <p style="margin-top:12px"><a href="#taller" data-view="workshop">Abrir ejercicios 1-10</a></p>
+        </aside>
+      </div>
+
+      <div class="view" id="workshop" aria-labelledby="workshop-title">
+        <div class="workshop-head">
+          <div>
+            <div class="eyebrow">Bloque 2 · Práctica guiada</div>
+            <h2 id="workshop-title">Del modelo heredado a un cuadro de mando que entiendes</h2>
+            <p class="lead" style="font-size:16px; margin:10px 0 0; max-width:700px">Abre un ejercicio, copia el prompt y valida el resultado antes de marcarlo como completado. El progreso se conserva en este navegador.</p>
+          </div>
+          <div class="progress" aria-live="polite">
+            <div class="progress-label"><span>Progreso</span><span id="progress-text">0 / 10</span></div>
+            <div class="bar"><span id="progress-bar"></span></div>
+          </div>
+        </div>
+        <div id="exercise-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell">
+      <span>Power BI + IA · Progreso guardado solo en este navegador.</span>
+      <button class="reset" id="reset" type="button">Reiniciar progreso</button>
     </div>
-  `;
-  listEl.appendChild(card);
-});
+  </footer>
 
-// event delegation: toggle open/close
-document.querySelectorAll('[data-toggle]').forEach(head => {
-  head.addEventListener('click', (ev) => {
-    if(ev.target.closest('.copy-btn') || ev.target.closest('.mark-done')) return;
-    head.closest('.exercise').classList.toggle('open');
-  });
-});
+  <script>
+    const exercises = [
+      { k: 'Puesta en marcha', t: 'Conectarse al informe', g: 'Conectarse al informe abierto usando MCP e identificar el informe correcto.', p: ['Conéctate al informe de Power BI que tengo abierto ahora mismo, llamado «[nombre del informe]», usando la herramienta MCP de Power BI.'], e: ['Confirma que está conectado al informe correcto.', 'Puede leer tablas y/o medidas sin errores de conexión.'] },
+      { k: 'Descubrimiento', t: 'Descubrir el modelo mediante IA', g: 'Comprender el modelo semántico sin revisar manualmente todas las tablas.', p: ['Describe este modelo semántico.', '¿Cuál es la tabla de hechos? ¿Cuáles son las dimensiones?', 'Genera un resumen funcional.'], e: ['Explica qué tablas son de hechos y cuáles dimensiones.', 'Relaciona el modelo con el negocio y sus usuarios.'] },
+      { k: 'Calidad y KPIs', t: 'Comprobar, corregir y crear KPIs', g: 'Revisar las medidas existentes, crear Margen y Ticket Medio, y decidir cómo validarlos.', p: ['Comprueba las medidas existentes e indica si detectas algún error o inconsistencia.', 'Crea las medidas Margen y Ticket Medio, y revisa que se aplican correctamente las modificaciones.'], e: ['Explica los problemas detectados, no solo los enumera.', 'El DAX de Margen y Ticket Medio se puede validar en visuales.'] },
+      { k: 'Visualización', t: 'Página ejecutiva', g: 'Planificar una página para dirección comercial antes de solicitar su creación.', p: ['Antes de crear nada, planifica una página ejecutiva para dirección comercial: propón los KPIs principales, los filtros necesarios y una distribución visual del contenido. Explícame el motivo de cada decisión.', 'La planificación me convence, crea la página siguiendo exactamente esa propuesta.'], e: ['Incluye KPIs, filtros y distribución con criterio de negocio.', 'Permite analizar periodo, canal y zona comercial.'] },
+      { k: 'Inteligencia temporal', t: 'Acumulados y comparativas interanuales', g: 'Crear Ventas YTD, Ventas LY, Variación € y Variación %.', p: ['Quiero realizar análisis con inteligencia temporal, ayúdame a crear varias medidas que me permitan conocer más detalle sobre las ventas: variaciones año a año, acumulados anuales y mensuales, variación en importe y en %.'], e: ['Las medidas no presentan errores de contexto temporal.', 'Las comparativas tienen sentido al filtrar por año y mes.'] },
+      { k: 'Rankings', t: 'Top N y clasificaciones', g: 'Crear un Top N de productos, un ranking de clientes y proponer visuales adecuados.', p: ['Crea una medida para Top N productos vendidos y un ranking de clientes. Recomiéndame también qué visuales usar para mostrarlos, y dame el detalle de cómo utilizar esas medidas en mi informe.'], e: ['Top N y rankings responden a filtros y segmentadores.', 'Las recomendaciones visuales son concretas y aplicables.'] },
+      { k: 'Auditoría', t: 'Actuar como arquitecto Power BI', g: 'Identificar problemas, riesgos y mejoras potenciales del modelo.', p: ['Actúa como arquitecto Power BI, e identifica problemas, riesgos y mejoras potenciales. Recopila toda la información en una tabla en la que se indique el impacto y el riesgo de cada uno de los cambios que propones.'], e: ['Devuelve una tabla priorizada con impacto y riesgo.', 'Separa quick wins de cambios estructurales.'] },
+      { k: 'Modelado avanzado', t: 'Dos fechas, una tabla de hechos', g: 'Analizar FechaPedido y FechaEntrega mediante relaciones activas, inactivas y USERELATIONSHIP.', p: ['En la tabla de hechos hay dos fechas, fecha de pedido y fecha de entrega. Haz los ajustes necesarios para poder analizar la información por ambas fechas, y dime cómo debería realizar los análisis como si fuese un desarrollador de Power BI junior que acaba de empezar.'], e: ['Aclara cuándo usar cada fecha.', 'Explica de forma comprensible relaciones y USERELATIONSHIP.'] },
+      { k: 'Refactorización', t: 'Convención de nombres y orden', g: 'Proponer y después aplicar una convención de nombres y carpetas de medidas.', p: ['Propón una convención de nombres y una organización de las medidas en carpetas, propónla primero y si es correcta la aplicaremos.'], e: ['La convención es consistente y mantenible.', 'Las medidas se organizan en carpetas funcionales.'] },
+      { k: 'Documentación', t: 'Documentación funcional del modelo', g: 'Generar documentación funcional completa, con origen, uso, reglas y evolución.', p: ['Genera documentación funcional completa en un fichero .md de tablas, relaciones, medidas, reglas de negocio y casos de uso. Necesito que se tenga trazabilidad de dónde vienen los datos (origen) y cómo se usan en el informe. Además de una descripción funcional de las tablas, las columnas, medidas y cálculos y una descripción general de lo que se muestra en las diferentes páginas del informe. Así como una propuesta de evolución del cuadro de mandos con próximos pasos.'], e: ['Se genera un Markdown utilizable con trazabilidad de origen y uso.', 'Incluye casos de uso y próximos pasos concretos.'] }
+    ];
 
-// copy buttons
-document.querySelectorAll('.copy-btn').forEach(btn => {
-  btn.addEventListener('click', async (ev) => {
-    ev.stopPropagation();
-    const text = promptMap[btn.dataset.copy];
-    try{
-      await navigator.clipboard.writeText(text);
-    } catch(err){
-      // fallback
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
+    const saved = JSON.parse(localStorage.getItem('pbi-ia-workshop') || '{}');
+    const list = document.getElementById('exercise-list');
+
+    function copyText(text, button) {
+      navigator.clipboard.writeText(text).then(() => {
+        const original = button.textContent;
+        button.textContent = 'Copiado';
+        setTimeout(() => { button.textContent = original; }, 1200);
+      });
     }
-    const original = btn.textContent;
-    btn.textContent = 'Copiado ✓';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1600);
-  });
-});
 
-// done checkboxes
-EXERCISES.forEach(e => {
-  const check = document.getElementById('done-check-' + e.n);
-  check.addEventListener('change', (ev) => {
-    ev.stopPropagation();
-    state[e.n] = check.checked;
-    updateProgress();
-  });
-  check.addEventListener('click', (ev) => ev.stopPropagation());
-});
+    function renderExercises() {
+      list.innerHTML = exercises.map((exercise, index) => `
+        <article class="exercise ${saved[index] ? 'completed' : ''}" id="exercise-${index + 1}">
+          <button class="exercise-toggle" type="button" aria-expanded="false">
+            <span class="number">${index + 1}</span>
+            <span><span class="exercise-kicker">${exercise.k}</span><h3>${exercise.t}</h3></span>
+            <span class="toggle-mark" aria-hidden="true">+</span>
+          </button>
+          <div class="exercise-content">
+            <p class="goal"><b>Objetivo.</b> ${exercise.g}</p>
+            ${exercise.p.map((prompt, promptIndex) => `<div class="prompt-line"><p id="prompt-${index}-${promptIndex}">${prompt}</p><button class="small-copy" type="button" data-prompt="prompt-${index}-${promptIndex}">Copiar</button></div>`).join('')}
+            <div class="expect"><b>Qué deberías validar</b><ul>${exercise.e.map(item => `<li>${item}</li>`).join('')}</ul></div>
+            <label class="complete"><input type="checkbox" data-complete="${index}" ${saved[index] ? 'checked' : ''}> Marcar ejercicio como completado</label>
+          </div>
+        </article>`).join('');
+      updateProgress();
+    }
 
-// prep checklist
-document.querySelectorAll('[data-check]').forEach(label => {
-  const input = label.querySelector('input');
-  input.addEventListener('change', () => {
-    label.classList.toggle('checked', input.checked);
-  });
-});
+    function updateProgress() {
+      const done = Object.values(saved).filter(Boolean).length;
+      document.getElementById('progress-text').textContent = `${done} / ${exercises.length}`;
+      document.getElementById('progress-bar').style.width = `${(done / exercises.length) * 100}%`;
+      localStorage.setItem('pbi-ia-workshop', JSON.stringify(saved));
+    }
 
-// reset
-document.getElementById('resetBtn').addEventListener('click', () => {
-  EXERCISES.forEach(e => {
-    state[e.n] = false;
-    document.getElementById('done-check-' + e.n).checked = false;
-    document.getElementById('exercise-' + e.n).classList.remove('open');
-  });
-  document.querySelectorAll('[data-check]').forEach(label => {
-    label.querySelector('input').checked = false;
-    label.classList.remove('checked');
-  });
-  updateProgress();
-  window.scrollTo({top:0, behavior:'smooth'});
-});
+    document.addEventListener('click', event => {
+      const viewLink = event.target.closest('[data-view]');
+      if (viewLink) {
+        event.preventDefault();
+        const view = viewLink.dataset.view;
+        document.querySelectorAll('.view').forEach(item => item.classList.toggle('active', item.id === view));
+        history.replaceState(null, '', `#${view === 'setup' ? 'conexion' : 'taller'}`);
+        document.getElementById(view).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      const toggle = event.target.closest('.exercise-toggle');
+      if (toggle) {
+        const card = toggle.closest('.exercise');
+        const open = card.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open);
+      }
+      const copy = event.target.closest('[data-prompt]');
+      if (copy) copyText(document.getElementById(copy.dataset.prompt).textContent, copy);
+      const connect = event.target.closest('[data-copy]');
+      if (connect) copyText(document.getElementById(connect.dataset.copy).textContent, connect);
+    });
 
-// open first exercise by default
-openExercise(1);
-updateProgress();
-</script>
+    document.addEventListener('change', event => {
+      if (event.target.matches('[data-complete]')) {
+        saved[event.target.dataset.complete] = event.target.checked;
+        event.target.closest('.exercise').classList.toggle('completed', event.target.checked);
+        updateProgress();
+      }
+      if (event.target.matches('[data-prep]')) {
+        event.target.closest('.check').classList.toggle('done', event.target.checked);
+      }
+    });
+
+    document.getElementById('reset').addEventListener('click', () => {
+      Object.keys(saved).forEach(key => delete saved[key]);
+      renderExercises();
+    });
+
+    renderExercises();
+    if (location.hash === '#taller') document.querySelector('[data-view="workshop"]').click();
+  </script>
 </body>
 </html>
