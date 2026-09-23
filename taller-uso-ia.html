@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Taller práctico de Power BI e IA con prompts para MCP.">
+  <title>Power BI + IA | Taller práctico</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#111417; --surface:#f5f3ed; --paper:#fffefa; --line:#d7d3c9; --muted:#656961; --teal:#007c78; --teal-light:#d9f0ec; --gold:#e9b723; --night:#1c2528; --display:Manrope,sans-serif; --mono:"DM Mono",monospace; --radius:7px; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background-color:var(--surface); background-image:linear-gradient(90deg,rgba(17,20,23,.025) 1px,transparent 1px),linear-gradient(rgba(17,20,23,.025) 1px,transparent 1px); background-size:24px 24px; font-family:var(--display); line-height:1.55; }
+    button,input { font:inherit; }
+    a { color:var(--teal); text-decoration-thickness:1px; text-underline-offset:3px; }
+    .shell { width:min(1120px,calc(100% - 40px)); margin:0 auto; }
+    .topbar { background:var(--night); color:#fffefa; border-bottom:3px solid var(--gold); }
+    .topbar-inner { min-height:62px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .brand { color:inherit; font-size:15px; font-weight:800; text-decoration:none; white-space:nowrap; }
+    .brand b { color:var(--gold); }
+    .topnav { display:flex; gap:20px; font-size:13px; font-weight:700; }
+    .topnav a { color:#dbe1dc; text-decoration:none; }
+    .topnav a:hover { color:var(--gold); }
+    .hero { padding:64px 0 42px; border-bottom:1px solid var(--line); }
+    .eyebrow { display:flex; align-items:center; gap:9px; color:var(--teal); font:500 12px var(--mono); letter-spacing:.06em; text-transform:uppercase; }
+    .eyebrow::before { content:""; width:30px; height:2px; background:currentColor; }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { margin:14px 0 18px; font-size:clamp(36px,5.5vw,65px); line-height:1.03; }
+    h1 em { color:var(--teal); font-style:normal; }
+    .lead { max-width:760px; color:#454a45; font-size:18px; line-height:1.65; }
+    .workspace { padding:32px 0 70px; }
+    .workshop-head { display:grid; grid-template-columns:1fr auto; gap:24px; align-items:end; margin-bottom:24px; }
+    .workshop-head h2 { max-width:760px; margin:6px 0 0; font-size:clamp(28px,3.5vw,42px); line-height:1.12; }
+    .progress { min-width:206px; }
+    .progress-label { display:flex; justify-content:space-between; color:var(--muted); font:12px var(--mono); }
+    .bar { height:8px; margin-top:7px; overflow:hidden; border:1px solid #b9b4a8; border-radius:999px; background:var(--paper); }
+    .bar > span { display:block; width:0; height:100%; background:var(--gold); transition:width .25s ease; }
+    .exercise { margin-bottom:16px; overflow:hidden; background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); }
+    .exercise.completed { border-color:#c9a328; }
+    .exercise-toggle { width:100%; display:grid; grid-template-columns:42px 1fr auto; gap:14px; align-items:center; padding:16px 18px; border:0; background:transparent; color:inherit; text-align:left; cursor:pointer; }
+    .exercise-toggle:hover { background:#f7f5ee; }
+    .number { display:grid; width:33px; height:33px; place-items:center; border-radius:4px; background:var(--night); color:white; font:13px var(--mono); }
+    .completed .number { background:var(--gold); color:var(--ink); }
+    .exercise-kicker { color:var(--teal); font:11px var(--mono); letter-spacing:.07em; text-transform:uppercase; }
+    .exercise h3 { margin:2px 0 0; font-size:17px; }
+    .toggle-mark { color:var(--muted); font-size:23px; transition:transform .2s ease; }
+    .exercise.open .toggle-mark { transform:rotate(45deg); }
+    .exercise-content { display:none; padding:21px 22px 22px 74px; border-top:1px solid var(--line); }
+    .exercise.open .exercise-content { display:block; }
+    .goal { margin-bottom:18px; color:#424842; font-size:14px; }
+    .goal b { color:var(--ink); }
+    .prompt-line { display:flex; gap:11px; align-items:flex-start; padding:13px; margin-top:9px; border:1px solid var(--line); border-radius:5px; background:#f8f7f2; }
+    .prompt-line p { flex:1; margin:0; font:13px/1.55 var(--mono); }
+    .small-copy { flex:0 0 auto; border:0; background:none; color:var(--teal); text-decoration:underline; font-size:12px; cursor:pointer; }
+    .expect { margin-top:18px; padding:13px 15px; background:var(--teal-light); border-left:3px solid var(--teal); font-size:13px; }
+    .expect b { display:block; margin-bottom:4px; }
+    .expect ul { margin:0; padding-left:19px; }
+    .complete { display:flex; gap:9px; align-items:center; margin-top:19px; padding-top:15px; border-top:1px solid var(--line); color:var(--teal); font-size:13px; font-weight:700; cursor:pointer; }
+    .complete input { width:17px; height:17px; accent-color:var(--teal); }
+    footer { padding:22px 0 45px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+    footer .shell { display:flex; justify-content:space-between; gap:15px; align-items:center; }
+    .reset { padding:6px 9px; border:1px solid var(--line); border-radius:4px; background:var(--paper); color:var(--muted); font-size:12px; cursor:pointer; }
+    @media (max-width:700px) { .shell { width:min(100% - 28px,1120px); } .topbar-inner { min-height:54px; } .topnav { gap:12px; font-size:12px; } .hero { padding:48px 0 35px; } .lead { font-size:16px; } .workshop-head { display:block; } .progress { margin-top:20px; } .exercise-toggle { grid-template-columns:35px 1fr auto; gap:10px; padding:14px; } .exercise-content { padding:18px 14px; } .prompt-line { display:block; } .small-copy { margin-top:9px; padding:0; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="index.html">POWER BI <b>+</b> IA</a>
+      <nav class="topnav" aria-label="Navegación principal">
+        <a href="index.html">1. Instalar y conectar</a>
+        <a href="taller-uso-ia.html">2. Taller práctico</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="shell">
+        <div class="eyebrow">Bloque 2 · Práctica guiada</div>
+        <h1>Ahora, <em>ponlo a prueba.</em></h1>
+        <p class="lead">Abre un ejercicio, copia el prompt y valida el resultado en Power BI antes de marcarlo como completado. El progreso se guarda en este navegador.</p>
+      </div>
+    </section>
+    <section class="workspace shell" aria-labelledby="workshop-title">
+      <div class="workshop-head">
+        <div><div class="eyebrow">Taller práctico</div><h2 id="workshop-title">Del modelo heredado a un cuadro de mando que entiendes</h2></div>
+        <div class="progress" aria-live="polite"><div class="progress-label"><span>Progreso</span><span id="progress-text">0 / 10</span></div><div class="bar"><span id="progress-bar"></span></div></div>
+      </div>
+      <div id="exercise-list"></div>
+    </section>
+  </main>
+  <footer><div class="shell"><span>Power BI + IA · Progreso guardado solo en este navegador.</span><button class="reset" id="reset" type="button">Reiniciar progreso</button></div></footer>
+  <script>
+    const exercises = [
+      { k:'Puesta en marcha', t:'Conectarse al informe', g:'Conectarse al informe abierto usando MCP e identificar el informe correcto.', p:['Conéctate al informe de Power BI que tengo abierto ahora mismo, llamado «[nombre del informe]», usando la herramienta MCP de Power BI.'], e:['Confirma que está conectado al informe correcto.','Puede leer tablas y/o medidas sin errores de conexión.'] },
+      { k:'Descubrimiento', t:'Descubrir el modelo mediante IA', g:'Comprender el modelo semántico sin revisar manualmente todas las tablas.', p:['Describe este modelo semántico.','¿Cuál es la tabla de hechos? ¿Cuáles son las dimensiones?','Genera un resumen funcional.'], e:['Explica qué tablas son de hechos y cuáles dimensiones.','Relaciona el modelo con el negocio y sus usuarios.'] },
+      { k:'Calidad y KPIs', t:'Comprobar, corregir y crear KPIs', g:'Revisar las medidas existentes, crear Margen y Ticket Medio, y decidir cómo validarlos.', p:['Comprueba las medidas existentes e indica si detectas algún error o inconsistencia.','Crea las medidas Margen y Ticket Medio, y revisa que se aplican correctamente las modificaciones.'], e:['Explica los problemas detectados, no solo los enumera.','El DAX de Margen y Ticket Medio se puede validar en visuales.'] },
+      { k:'Visualización', t:'Página ejecutiva', g:'Planificar una página para dirección comercial antes de solicitar su creación.', p:['Antes de crear nada, planifica una página ejecutiva para dirección comercial: propón los KPIs principales, los filtros necesarios y una distribución visual del contenido. Explícame el motivo de cada decisión.','La planificación me convence, crea la página siguiendo exactamente esa propuesta.'], e:['Incluye KPIs, filtros y distribución con criterio de negocio.','Permite analizar periodo, canal y zona comercial.'] },
+      { k:'Inteligencia temporal', t:'Acumulados y comparativas interanuales', g:'Crear Ventas YTD, Ventas LY, Variación € y Variación %.', p:['Quiero realizar análisis con inteligencia temporal, ayúdame a crear varias medidas que me permitan conocer más detalle sobre las ventas: variaciones año a año, acumulados anuales y mensuales, variación en importe y en %.'], e:['Las medidas no presentan errores de contexto temporal.','Las comparativas tienen sentido al filtrar por año y mes.'] },
+      { k:'Rankings', t:'Top N y clasificaciones', g:'Crear un Top N de productos, un ranking de clientes y proponer visuales adecuados.', p:['Crea una medida para Top N productos vendidos y un ranking de clientes. Recomiéndame también qué visuales usar para mostrarlos, y dame el detalle de cómo utilizar esas medidas en mi informe.'], e:['Top N y rankings responden a filtros y segmentadores.','Las recomendaciones visuales son concretas y aplicables.'] },
+      { k:'Auditoría', t:'Actuar como arquitecto Power BI', g:'Identificar problemas, riesgos y mejoras potenciales del modelo.', p:['Actúa como arquitecto Power BI, e identifica problemas, riesgos y mejoras potenciales. Recopila toda la información en una tabla en la que se indique el impacto y el riesgo de cada uno de los cambios que propones.'], e:['Devuelve una tabla priorizada con impacto y riesgo.','Separa quick wins de cambios estructurales.'] },
+      { k:'Modelado avanzado', t:'Dos fechas, una tabla de hechos', g:'Analizar FechaPedido y FechaEntrega mediante relaciones activas, inactivas y USERELATIONSHIP.', p:['En la tabla de hechos hay dos fechas, fecha de pedido y fecha de entrega. Haz los ajustes necesarios para poder analizar la información por ambas fechas, y dime cómo debería realizar los análisis como si fuese un desarrollador de Power BI junior que acaba de empezar.'], e:['Aclara cuándo usar cada fecha.','Explica de forma comprensible relaciones y USERELATIONSHIP.'] },
+      { k:'Refactorización', t:'Convención de nombres y orden', g:'Proponer y después aplicar una convención de nombres y carpetas de medidas.', p:['Propón una convención de nombres y una organización de las medidas en carpetas, propónla primero y si es correcta la aplicaremos.'], e:['La convención es consistente y mantenible.','Las medidas se organizan en carpetas funcionales.'] },
+      { k:'Documentación', t:'Documentación funcional del modelo', g:'Generar documentación funcional completa, con origen, uso, reglas y evolución.', p:['Genera documentación funcional completa en un fichero .md de tablas, relaciones, medidas, reglas de negocio y casos de uso. Necesito que se tenga trazabilidad de dónde vienen los datos (origen) y cómo se usan en el informe. Además de una descripción funcional de las tablas, las columnas, medidas y cálculos y una descripción general de lo que se muestra en las diferentes páginas del informe. Así como una propuesta de evolución del cuadro de mandos con próximos pasos.'], e:['Se genera un Markdown utilizable con trazabilidad de origen y uso.','Incluye casos de uso y próximos pasos concretos.'] }
+    ];
+    const saved = JSON.parse(localStorage.getItem('pbi-ia-workshop') || '{}');
+    const list = document.getElementById('exercise-list');
+    function copyText(text, button) { navigator.clipboard.writeText(text).then(() => { const original=button.textContent; button.textContent='Copiado'; setTimeout(() => { button.textContent=original; }, 1200); }); }
+    function updateProgress() { const done=Object.values(saved).filter(Boolean).length; document.getElementById('progress-text').textContent=`${done} / ${exercises.length}`; document.getElementById('progress-bar').style.width=`${(done / exercises.length) * 100}%`; localStorage.setItem('pbi-ia-workshop', JSON.stringify(saved)); }
+    function renderExercises() { list.innerHTML=exercises.map((exercise,index) => `<article class="exercise ${saved[index] ? 'completed' : ''}" id="exercise-${index + 1}"><button class="exercise-toggle" type="button" aria-expanded="false"><span class="number">${index + 1}</span><span><span class="exercise-kicker">${exercise.k}</span><h3>${exercise.t}</h3></span><span class="toggle-mark" aria-hidden="true">+</span></button><div class="exercise-content"><p class="goal"><b>Objetivo.</b> ${exercise.g}</p>${exercise.p.map((prompt,promptIndex) => `<div class="prompt-line"><p id="prompt-${index}-${promptIndex}">${prompt}</p><button class="small-copy" type="button" data-prompt="prompt-${index}-${promptIndex}">Copiar</button></div>`).join('')}<div class="expect"><b>Qué deberías validar</b><ul>${exercise.e.map(item => `<li>${item}</li>`).join('')}</ul></div><label class="complete"><input type="checkbox" data-complete="${index}" ${saved[index] ? 'checked' : ''}> Marcar ejercicio como completado</label></div></article>`).join(''); updateProgress(); }
+    document.addEventListener('click', event => { const toggle=event.target.closest('.exercise-toggle'); if (toggle) { const card=toggle.closest('.exercise'); const open=card.classList.toggle('open'); toggle.setAttribute('aria-expanded', open); } const copy=event.target.closest('[data-prompt]'); if (copy) copyText(document.getElementById(copy.dataset.prompt).textContent, copy); });
+    document.addEventListener('change', event => { if (event.target.matches('[data-complete]')) { saved[event.target.dataset.complete]=event.target.checked; event.target.closest('.exercise').classList.toggle('completed',event.target.checked); updateProgress(); } });
+    document.getElementById('reset').addEventListener('click', () => { Object.keys(saved).forEach(key => delete saved[key]); renderExercises(); });
+    renderExercises();
+  </script>
+</body>
+</html>
